@@ -5,7 +5,7 @@
 using namespace std;
 
 /*
- * ÄÚÖÃ¼òµ¥ MD5 ÊµÏÖ¡£
+ * ï¿½ï¿½ï¿½Ã¼ï¿½ MD5 Êµï¿½Ö¡ï¿½
  */
 namespace {
 static const uint32_t MD5_INIT_STATE[4] = {
@@ -91,7 +91,7 @@ string md5(const string& input) {
     for (int i = 0; i < 16; i++) {
       M[i] = to_uint32(chunk + i * 4);
     }
-    // 64 ÂÖ
+    // 64 ï¿½ï¿½
     FF(a, b, c, d, M[0], 7, MD5_SINE_TABLE[0]);
     FF(d, a, b, c, M[1], 12, MD5_SINE_TABLE[1]);
     FF(c, d, a, b, M[2], 17, MD5_SINE_TABLE[2]);
@@ -172,14 +172,15 @@ string md5(const string& input) {
 }
 
 //================================================================
-static const char PLAYER = 'W';  // Íæ¼Ò(°×Æå)
-static const char AI = 'B';      // AI(ºÚÆå)
+static const char PLAYER = 'W';  // ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
+static const char AI = 'B';      // AI(ï¿½ï¿½ï¿½ï¿½)
 
 static const int ROWS = 5;
 static const int COLS = 5;
-static const int MAX_STACK = 5;  // Ã¿¸ñ×î¶à¶Ñµþ 5 ²ã
+static const int MAX_STACK = 5;  // Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ 5 ï¿½ï¿½
+static const int MAX_DEPTH = 7;
 
-// ÖÃ»»±í½á¹¹
+// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½á¹¹
 struct TranspositionEntry {
   int depth;
   double alpha;
@@ -188,11 +189,11 @@ struct TranspositionEntry {
   pair<int, int> bestMove;
 };
 
-// È«¾ÖÖÃ»»±í + »¥³âËø
+// È«ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 static unordered_map<string, TranspositionEntry> transposition_table;
 static std::mutex transposition_table_mutex;
 
-// Ê±¼ä¸¨Öú
+// Ê±ï¿½ä¸¨ï¿½ï¿½
 static inline double now_in_seconds() {
   using namespace std::chrono;
   auto tp = high_resolution_clock::now();
@@ -201,7 +202,7 @@ static inline double now_in_seconds() {
 }
 
 //================================================================
-// ÆåÅÌ²Ù×÷
+// ï¿½ï¿½ï¿½Ì²ï¿½ï¿½ï¿½
 vector<vector<vector<char>>> create_board() {
   return vector<vector<vector<char>>>(ROWS, vector<vector<char>>(COLS));
 }
@@ -226,7 +227,7 @@ bool is_board_full(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// ÆåÅÌ×ª×Ö·û´®
+// ï¿½ï¿½ï¿½ï¿½×ªï¿½Ö·ï¿½ï¿½ï¿½
 string board_to_str(const vector<vector<vector<char>>>& board) {
   ostringstream oss;
   for (int r = 0; r < ROWS; r++) {
@@ -248,7 +249,7 @@ string hash_board(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// Ê¤¸º¼ì²â
+// Ê¤ï¿½ï¿½ï¿½ï¿½ï¿½
 char check_winner(const vector<vector<vector<char>>>& board) {
   static vector<array<int, 3>> directions_3d = {
       {0, 1, 0},
@@ -298,7 +299,7 @@ char check_winner(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// Ä£Ê½Æ¥Åä´ò·Ö
+// Ä£Ê½Æ¥ï¿½ï¿½ï¿½ï¿½
 static unordered_map<string, int> black_pattern_score = {
     {"BBBB", 9999999},
     {"BBB-", 5000},
@@ -399,11 +400,11 @@ double evaluate(const vector<vector<vector<char>>>& board) {
       if (p == PLAYER)
         hasW = true;
     }
-    // ÈôÍ¬Ê±ÓÐ B / W£¬ÔòÌø¹ý
+    // ï¿½ï¿½Í¬Ê±ï¿½ï¿½ B / Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     if (hasB && hasW)
       continue;
 
-    // ¹¹½¨Ä£Ê½´®
+    // ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½
     ostringstream oss;
     for (char p : pieces) {
       if (p == AI)
@@ -415,12 +416,12 @@ double evaluate(const vector<vector<vector<char>>>& board) {
     }
     string pattern = oss.str();
     if (pattern.find('B') != string::npos && pattern.find('W') == string::npos) {
-      // Ö»ÓÐ B
+      // Ö»ï¿½ï¿½ B
       if (black_pattern_score.count(pattern)) {
         ai_potential += black_pattern_score[pattern];
       }
     } else if (pattern.find('W') != string::npos && pattern.find('B') == string::npos) {
-      // Ö»ÓÐ W
+      // Ö»ï¿½ï¿½ W
       if (white_pattern_score.count(pattern)) {
         player_potential += white_pattern_score[pattern];
       }
@@ -430,7 +431,7 @@ double evaluate(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// ÖÃ»»±í·ÃÎÊ
+// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 bool tt_lookup(const string& key, int depth, double alpha, double beta, double& val, pair<int, int>& bestMove) {
   lock_guard<mutex> guard(transposition_table_mutex);
   auto it = transposition_table.find(key);
@@ -451,7 +452,7 @@ void tt_store(const string& key, int depth, double alpha, double beta, double va
 }
 
 //================================================================
-// µ¥Ïß³Ì°æ±¾ minimax
+// ï¿½ï¿½ï¿½ß³Ì°æ±¾ minimax
 pair<double, pair<int, int>> minimax_single(
     const vector<vector<vector<char>>>& board,
     int depth,
@@ -473,7 +474,7 @@ pair<double, pair<int, int>> minimax_single(
   if (maximizing) {
     double best_val = -numeric_limits<double>::infinity();
     pair<int, int> best_move(-1, -1);
-    // Ã¶¾ÙËùÓÐ¿ÉÐÐ×ß
+    // Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½
     vector<pair<int, int>> moves;
     for (int r = 0; r < ROWS; r++) {
       for (int c = 0; c < COLS; c++) {
@@ -481,7 +482,7 @@ pair<double, pair<int, int>> minimax_single(
           moves.push_back({r, c});
       }
     }
-    // ÅÅÐò(ÖÐÐÄÓÅÏÈ)
+    // ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
     int cr = ROWS / 2, cc = COLS / 2;
     sort(moves.begin(), moves.end(), [&](auto& m1, auto& m2) {
       int d1 = abs(m1.first - cr) + abs(m1.second - cc);
@@ -504,7 +505,7 @@ pair<double, pair<int, int>> minimax_single(
   } else {
     double best_val = numeric_limits<double>::infinity();
     pair<int, int> best_move(-1, -1);
-    // Ã¶¾Ù
+    // Ã¶ï¿½ï¿½
     vector<pair<int, int>> moves;
     for (int r = 0; r < ROWS; r++) {
       for (int c = 0; c < COLS; c++) {
@@ -535,12 +536,12 @@ pair<double, pair<int, int>> minimax_single(
 }
 
 //================================================================
-// ²¢ÐÐËÑË÷ (½öÔÚ¸ù½Úµã)
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½Úµï¿½)
 pair<double, pair<int, int>> minimax_root_parallel(
     const vector<vector<vector<char>>>& board,
     int depth,
     bool maximizing) {
-  // ÊÕ¼¯ËùÓÐ¿ÉÐÐ×ß·¨
+  // ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ß·ï¿½
   vector<pair<int, int>> moves;
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
@@ -549,7 +550,7 @@ pair<double, pair<int, int>> minimax_root_parallel(
     }
   }
   if (moves.empty()) {
-    // ÎÞ¿É×ßÊ±£¬Ö±½ÓÆÀ¹À
+    // ï¿½Þ¿ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     double sc = evaluate(board);
     return {sc, {-1, -1}};
   }
@@ -561,7 +562,7 @@ pair<double, pair<int, int>> minimax_root_parallel(
     return d1 < d2;
   });
 
-  // ²¢ÐÐ£º¶ÔÃ¿¸ö×ß·¨¿ªÆôÒ»¸öÏß³Ì½øÐÐµ¥Ïß³Ì minimax
+  // ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ß·ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³Ì½ï¿½ï¿½Ðµï¿½ï¿½ß³ï¿½ minimax
   vector<future<pair<double, pair<int, int>>>> futs;
   futs.reserve(moves.size());
   for (auto& mv : moves) {
@@ -571,12 +572,12 @@ pair<double, pair<int, int>> minimax_root_parallel(
                                 -numeric_limits<double>::infinity(),
                                 numeric_limits<double>::infinity(),
                                 !maximizing);
-      // ·µ»Ø {value, rootMove}
+      // ï¿½ï¿½ï¿½ï¿½ {value, rootMove}
       return make_pair(ret.first, mv);
     }));
   }
 
-  // ¹é²¢½á¹û
+  // ï¿½é²¢ï¿½ï¿½ï¿½
   double best_val = maximizing ? -numeric_limits<double>::infinity()
                                : numeric_limits<double>::infinity();
   pair<int, int> best_move(-1, -1);
@@ -600,7 +601,7 @@ pair<double, pair<int, int>> minimax_root_parallel(
 }
 
 //================================================================
-// ×îÖÕµÄµü´ú¼ÓÉîËÑË÷£ºÖ»ÓÐ×î¸ßÉî¶È²Å²¢ÐÐ
+// ï¿½ï¿½ï¿½ÕµÄµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È²Å²ï¿½ï¿½ï¿½
 pair<double, pair<int, int>> search_best_move(
     const vector<vector<vector<char>>>& board,
     int max_depth,
@@ -608,7 +609,7 @@ pair<double, pair<int, int>> search_best_move(
   pair<double, pair<int, int>> best_result = {0.0, {-1, -1}};
   for (int d = 1; d <= max_depth; d++) {
     if (d < max_depth) {
-      // ²»µ½×î¸ßÉî¶È£¬µ¥Ïß³Ì root ËÑË÷
+      // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½ß³ï¿½ root ï¿½ï¿½ï¿½ï¿½
       auto ret = minimax_single(board, d,
                                 -numeric_limits<double>::infinity(),
                                 numeric_limits<double>::infinity(),
@@ -620,21 +621,21 @@ pair<double, pair<int, int>> search_best_move(
         break;
       }
     } else {
-      // d == max_depth Ê±£¬½øÐÐ²¢ÐÐËÑË÷
+      // d == max_depth Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
       auto ret = minimax_root_parallel(board, d, maximizing);
       if (ret.second.first != -1) {
         best_result = ret;
       }
-      break;  // ×î¸ßÉî¶Èºó¾Í²»ÔÙ¼ÌÐø
+      break;  // ï¿½ï¿½ï¿½ï¿½ï¿½Èºï¿½Í²ï¿½ï¿½Ù¼ï¿½ï¿½ï¿½
     }
   }
   return best_result;
 }
 
 //================================================================
-// µ¥²½±ØÉ±/·ÀÊØ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±/ï¿½ï¿½ï¿½ï¿½
 pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>& board) {
-  // AI ±ØÉ±
+  // AI ï¿½ï¿½É±
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (is_valid_move(board, r, c)) {
@@ -645,7 +646,7 @@ pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>
       }
     }
   }
-  // ·ÀÊØ¶ÔÊÖ
+  // ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (is_valid_move(board, r, c)) {
@@ -660,9 +661,9 @@ pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>
 }
 
 //================================================================
-// Õ¹Ê¾ÓëÖ÷Ñ­»·
+// Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½
 void print_board(const vector<vector<vector<char>>>& board) {
-  cout << "µ±Ç°ÆåÅÌ£¨µ×¡ú¶¥£©:" << endl;
+  cout << "ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ì£ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½ï¿½:" << endl;
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (board[r][c].empty()) {
@@ -680,7 +681,7 @@ void print_board(const vector<vector<vector<char>>>& board) {
 }
 
 int main() {
-  // ±£Áô¸ÃÐÐ¼ÓËÙ C++ I/O£¬µ«ÐèÒªÊÖ¶¯ flush/endl
+  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ C++ I/Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ö¶ï¿½ flush/endl
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
@@ -690,30 +691,29 @@ int main() {
   board[3] = {{}, {}, {'B'}, {'W'}, {}};
 
   char current_player = AI;
-  int MAX_DEPTH = 7;  // ¿É×ÔÐÐµ÷ÕûËÑË÷Éî¶È
 
   bool ai_first_move_done = true;
 
   while (true) {
-    // ÏÔÊ¾ÆåÅÌ
+    // ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
     print_board(board);
 
     char w = check_winner(board);
     if (w != '\0') {
-      cout << "ÓÎÏ·½áÊø£¬Ê¤Õß£º" << w << endl;
+      cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¤ï¿½ß£ï¿½" << w << endl;
       break;
     }
     if (is_board_full(board)) {
-      cout << "ÆåÅÌÒÑÂú£¬Æ½¾Ö£¡" << endl;
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½Ö£ï¿½" << endl;
       break;
     }
 
     if (current_player == PLAYER) {
-      cout << "ÇëÂä×Ó£¬ÊäÈëÐÐÁÐ(Èç 1 1):" << endl;
-      // endl»á×Ô¶¯ flush£¬È·±£ÌáÊ¾¿É¼û
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ 1 1):" << endl;
+      // endlï¿½ï¿½ï¿½Ô¶ï¿½ flushï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½É¼ï¿½
       string line;
       if (!std::getline(cin, line)) {
-        // Èô¶ÁÈ¡Ê§°Ü(EOFµÈ)£¬¿ÉÊÓÐèÇó´¦Àí
+        // ï¿½ï¿½ï¿½ï¿½È¡Ê§ï¿½ï¿½(EOFï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         break;
       }
       if (line.empty()) {
@@ -728,19 +728,19 @@ int main() {
         rr -= 1;
         cc -= 1;
         if (!is_valid_move(board, rr, cc)) {
-          cout << "·Ç·¨Âä×Ó£¬ÇëÖØÐÂÊäÈë£¡" << endl;
+          cout << "ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¡" << endl;
           continue;
         }
         board = make_move(board, rr, cc, PLAYER);
         current_player = AI;
       } catch (...) {
-        cout << "ÊäÈë¸ñÊ½ÓÐÎó£¬ÇëÖØÐÂÊäÈë¡£" << endl;
+        cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¡£" << endl;
       }
     } else {
-      cout << "¿ªÊ¼¼ÆËã..." << endl;
-      // Í¬Ñù endl£¬Á¢¼´Êä³ö
+      cout << "ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½..." << endl;
+      // Í¬ï¿½ï¿½ endlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-      // Çå¿ÕÖÃ»»±í
+      // ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
       {
         lock_guard<mutex> guard(transposition_table_mutex);
         transposition_table.clear();
@@ -748,38 +748,38 @@ int main() {
       double start_time = now_in_seconds();
 
       if (!ai_first_move_done) {
-        // AIµÚÒ»ÊÖ£º¿ÉÒÔÇ³²ãËÑË÷
+        // AIï¿½ï¿½Ò»ï¿½Ö£ï¿½ï¿½ï¿½ï¿½ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int shallow_depth = 7;
         auto ret = minimax_root_parallel(board, shallow_depth, true);
         double spent = now_in_seconds() - start_time;
         auto mv = ret.second;
         if (mv.first != -1) {
           board = make_move(board, mv.first, mv.second, AI);
-          cout << "¡¾AIµÚÒ»ÊÖ¡¿Âä×Ó: ÐÐ " << (mv.first + 1)
-               << ", ÁÐ " << (mv.second + 1)
-               << ", ºÄÊ± " << fixed << setprecision(2) << spent << "s" << endl;
+          cout << "ï¿½ï¿½AIï¿½ï¿½Ò»ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << (mv.first + 1)
+               << ", ï¿½ï¿½ " << (mv.second + 1)
+               << ", ï¿½ï¿½Ê± " << fixed << setprecision(2) << spent << "s" << endl;
         }
         ai_first_move_done = true;
       } else {
-        // ²éµ¥²½±ØÉ±»ò·ÀÊØ
+        // ï¿½éµ¥ï¿½ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½ï¿½
         auto urgent = check_immediate_win_or_defense(board);
         if (urgent.first != -1) {
-          // ½ô¼±²ßÂÔ
+          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
           board = make_move(board, urgent.first, urgent.second, AI);
           double spent = now_in_seconds() - start_time;
-          cout << "¡¾AI½ô¼±²ßÂÔ¡¿Âä×Ó: ÐÐ " << (urgent.first + 1)
-               << ", ÁÐ " << (urgent.second + 1)
-               << ", ºÄÊ± " << fixed << setprecision(2) << spent << "s" << endl;
+          cout << "ï¿½ï¿½AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << (urgent.first + 1)
+               << ", ï¿½ï¿½ " << (urgent.second + 1)
+               << ", ï¿½ï¿½Ê± " << fixed << setprecision(2) << spent << "s" << endl;
         } else {
-          // Õý³£µü´ú¼ÓÉî (×î¸ßÉî¶È²¢ÐÐ)
+          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ï¿½)
           auto best_ret = search_best_move(board, MAX_DEPTH, true);
           double spent = now_in_seconds() - start_time;
           double best_score = best_ret.first;
           auto mv = best_ret.second;
           if (mv.first != -1) {
-            cout << "AI Âä×Ó: ÐÐ " << (mv.first + 1)
-                 << ", ÁÐ " << (mv.second + 1)
-                 << ", ºÄÊ± " << fixed << setprecision(2) << spent << "s"
+            cout << "AI ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << (mv.first + 1)
+                 << ", ï¿½ï¿½ " << (mv.second + 1)
+                 << ", ï¿½ï¿½Ê± " << fixed << setprecision(2) << spent << "s"
                  << ", score=" << best_score << endl;
             board = make_move(board, mv.first, mv.second, AI);
           }
@@ -790,6 +790,6 @@ int main() {
   }
 
   print_board(board);
-  cout << "ÓÎÏ·½áÊø£¡" << endl;
+  cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
   return 0;
 }

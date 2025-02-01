@@ -3,28 +3,30 @@ using namespace std;
 
 /*
 ========================================
-  1. È«¾Ö³£Á¿ & ¹¤¾ß
+  1. È«ï¿½Ö³ï¿½ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½
 ========================================
 */
 static const int ROWS = 5;
 static const int COLS = 5;
-static const int MAX_STACK = 5;  // Ã¿¸ñ×î¶à5²ã
-static const char PLAYER = 'W';  // °×Æå
-static const char AI = 'B';      // ºÚÆå
+static const int MAX_STACK = 5;  // Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½5ï¿½ï¿½
+static const int MAX_DEPTH = 9;
 
-// ÏßÐÔ»¯: index = r*25 + c*5 + l
+static const char PLAYER = 'W';  // ï¿½ï¿½ï¿½ï¿½
+static const char AI = 'B';      // ï¿½ï¿½ï¿½ï¿½
+
+// ï¿½ï¿½ï¿½Ô»ï¿½: index = r*25 + c*5 + l
 inline int indexOf(int r, int c, int l) {
   return r * 25 + c * 5 + l;
 }
 
 /*
 ========================================
-  2. ×Ô¶¨Òå BitBoard (2¡Áuint64_t)
+  2. ï¿½Ô¶ï¿½ï¿½ï¿½ BitBoard (2ï¿½ï¿½uint64_t)
 ========================================
 */
 struct BitBoard {
-  uint64_t lo;  // µÍ64Î»
-  uint64_t hi;  // ¸ß64Î»
+  uint64_t lo;  // ï¿½ï¿½64Î»
+  uint64_t hi;  // ï¿½ï¿½64Î»
 
   BitBoard()
       : lo(0ULL), hi(0ULL) {}
@@ -58,15 +60,15 @@ struct BitBoard {
       return ((hi >> pos) & 1ULL) != 0ULL;
     }
   }
-  // °´Î»Óë
+  // ï¿½ï¿½Î»ï¿½ï¿½
   inline BitBoard operator&(const BitBoard& rhs) const {
     return BitBoard(lo & rhs.lo, hi & rhs.hi);
   }
-  // °´Î»»ò
+  // ï¿½ï¿½Î»ï¿½ï¿½
   inline BitBoard operator|(const BitBoard& rhs) const {
     return BitBoard(lo | rhs.lo, hi | rhs.hi);
   }
-  // °´Î»Òì»ò
+  // ï¿½ï¿½Î»ï¿½ï¿½ï¿½
   inline BitBoard operator^(const BitBoard& rhs) const {
     return BitBoard(lo ^ rhs.lo, hi ^ rhs.hi);
   }
@@ -74,7 +76,7 @@ struct BitBoard {
     lo ^= rhs.lo;
     hi ^= rhs.hi;
   }
-  // ÊÇ·ñÈ«²¿Îª0
+  // ï¿½Ç·ï¿½È«ï¿½ï¿½Îª0
   inline bool empty() const {
     return (lo == 0ULL && hi == 0ULL);
   }
@@ -82,7 +84,7 @@ struct BitBoard {
 
 /*
 ========================================
-  3. ¾ÖÃæ Board
+  3. ï¿½ï¿½ï¿½ï¿½ Board
      - blackBB, whiteBB
      - topIndex[r][c]
      - boardHash (Zobrist)
@@ -91,7 +93,7 @@ struct BitBoard {
 struct Board {
   BitBoard blackBB;
   BitBoard whiteBB;
-  int topIndex[ROWS][COLS];  // ¶Ñµþ¸ß¶È
+  int topIndex[ROWS][COLS];  // ï¿½Ñµï¿½ï¿½ß¶ï¿½
   uint64_t boardHash;        // zobrist
 
   Board() {
@@ -103,7 +105,7 @@ struct Board {
 /*
 ========================================
   4. Zobrist Hash
-     - Ã¿¸ö index ¡Ê[0..124], color=0(B),1(W)
+     - Ã¿ï¿½ï¿½ index ï¿½ï¿½[0..124], color=0(B),1(W)
 ========================================
 */
 static uint64_t ZOBRIST[125][2];
@@ -118,7 +120,7 @@ static void initZobrist() {
   }
 }
 
-// ÔÚ Board »ù´¡ÉÏÖØËãÕû¸öZobrist(¿ÉÑ¡) - Í¨³£ÓÃÔöÁ¿XOR
+// ï¿½ï¿½ Board ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zobrist(ï¿½ï¿½Ñ¡) - Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½XOR
 uint64_t calcZobrist(const Board& bd) {
   uint64_t h = 0ULL;
   // black
@@ -138,17 +140,17 @@ uint64_t calcZobrist(const Board& bd) {
 
 /*
 ========================================
-  5. »ù´¡²Ù×÷: isValid, makeMove, isFull
+  5. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: isValid, makeMove, isFull
 ========================================
 */
-// ÅÐ¶ÏÄÜ·ñÔÚ(r,c)Âä×Ó
+// ï¿½Ð¶ï¿½ï¿½Ü·ï¿½ï¿½ï¿½(r,c)ï¿½ï¿½ï¿½ï¿½
 bool isValidMove(const Board& bd, int r, int c) {
   if (r < 0 || r >= ROWS || c < 0 || c >= COLS)
     return false;
   return (bd.topIndex[r][c] < MAX_STACK);
 }
 
-// Âä×Ó: Éú³ÉÐÂ¾ÖÃæ(¿½±´Ê½)
+// ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Ê½)
 Board makeMove(const Board& bd, int r, int c, bool isBlack) {
   Board newbd = bd;
   int layer = newbd.topIndex[r][c];
@@ -166,7 +168,7 @@ Board makeMove(const Board& bd, int r, int c, bool isBlack) {
   return newbd;
 }
 
-// ÅÐ¶ÏÊÇ·ñÂú
+// ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½
 bool isBoardFull(const Board& bd) {
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
@@ -179,17 +181,17 @@ bool isBoardFull(const Board& bd) {
 
 /*
 ========================================
-  6. Ê¤¸º¼ì²â
-     - ÏÈÔ¤¼ÆËãËùÓÐ 4 Á¬ lines
-     - ¶Ô blackBB / whiteBB ¼ì²é
+  6. Ê¤ï¿½ï¿½ï¿½ï¿½ï¿½
+     - ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ lines
+     - ï¿½ï¿½ blackBB / whiteBB ï¿½ï¿½ï¿½
 ========================================
 */
-// lines: Ã¿Ìõ°üº¬ 4 ¸ö index
+// lines: Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ index
 static vector<array<int, 4>> allLines;
 
 static void buildAllLines() {
   allLines.clear();
-  // 3D·½Ïò
+  // 3Dï¿½ï¿½ï¿½ï¿½
   static const int dirs[13][3] = {
       {0, 1, 0},
       {1, 0, 0},
@@ -235,9 +237,9 @@ static void buildAllLines() {
   }
 }
 
-// ¿ìËÙ¼ì²é 4 Á¬
+// ï¿½ï¿½ï¿½Ù¼ï¿½ï¿½ 4 ï¿½ï¿½
 bool checkWin(const BitBoard& b) {
-  // ±éÀú allLines
+  // ï¿½ï¿½ï¿½ï¿½ allLines
   for (auto& ln : allLines) {
     if (b.testBit(ln[0]) && b.testBit(ln[1]) &&
         b.testBit(ln[2]) && b.testBit(ln[3])) {
@@ -247,7 +249,7 @@ bool checkWin(const BitBoard& b) {
   return false;
 }
 
-// ÈôºÚÓ®·µ»Ø 'B', °×Ó®·µ»Ø 'W', ·ñÔò·µ»Ø '\0'
+// ï¿½ï¿½ï¿½ï¿½Ó®ï¿½ï¿½ï¿½ï¿½ 'B', ï¿½ï¿½Ó®ï¿½ï¿½ï¿½ï¿½ 'W', ï¿½ï¿½ï¿½ò·µ»ï¿½ '\0'
 char checkWinner(const Board& bd) {
   if (checkWin(bd.blackBB))
     return 'B';
@@ -258,9 +260,9 @@ char checkWinner(const Board& bd) {
 
 /*
 ========================================
-  7. ÆÀ¹Àº¯Êý
-     - ±éÀú allLines, Í³¼ÆÖ»º¬ºÚ»òÖ»º¬°×µÄÏß
-     - (Ò²¿É×ö¸ü¸ß¼¶Î»ÔËËã)
+  7. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     - ï¿½ï¿½ï¿½ï¿½ allLines, Í³ï¿½ï¿½Ö»ï¿½ï¿½ï¿½Ú»ï¿½Ö»ï¿½ï¿½ï¿½×µï¿½ï¿½ï¿½
+     - (Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½Î»ï¿½ï¿½ï¿½ï¿½)
 ========================================
 */
 static unordered_map<string, int> black_pattern_score = {
@@ -295,16 +297,16 @@ static unordered_map<string, int> white_pattern_score = {
     {"----", 0}};
 
 double evaluate(const Board& bd) {
-  // ÏÈ¿´ÊÇ·ñÓÐÈËÓ®
+  // ï¿½È¿ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Ó®
   if (checkWin(bd.blackBB))
     return 99999999.0;
   if (checkWin(bd.whiteBB))
     return -99999999.0;
 
   long long blackScore = 0, whiteScore = 0;
-  // ±éÀú allLines
+  // ï¿½ï¿½ï¿½ï¿½ allLines
   for (auto& ln : allLines) {
-    // ÅÐ¶Ï4¸öÎ»ÖÃÉÏÊÇB/W/¿Õ
+    // ï¿½Ð¶ï¿½4ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B/W/ï¿½ï¿½
     bool hasB = false, hasW = false;
     int Bcount = 0, Wcount = 0;
     for (int i = 0; i < 4; i++) {
@@ -323,8 +325,8 @@ double evaluate(const Board& bd) {
         break;
     }
     if (hasB && !hasW) {
-      // ¹¹½¨Ä£Ê½, e.g. "BB--"
-      // ÕâÀï¿É¼ò»¯: Bcount=0..4 => switch
+      // ï¿½ï¿½ï¿½ï¿½Ä£Ê½, e.g. "BB--"
+      // ï¿½ï¿½ï¿½ï¿½É¼ï¿½: Bcount=0..4 => switch
       switch (Bcount) {
         case 4:
           blackScore += 9999999;
@@ -365,7 +367,7 @@ double evaluate(const Board& bd) {
 
 /*
 ========================================
-  8. ÖÃ»»±í + ÀúÊ·Æô·¢ + Minimax
+  8. ï¿½Ã»ï¿½ï¿½ï¿½ + ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ + Minimax
 ========================================
 */
 enum class BoundType { EXACT,
@@ -395,7 +397,7 @@ static inline double now_in_seconds() {
   return double(duration_cast<milliseconds>(dur).count()) / 1000.0;
 }
 
-// TT²éÕÒ
+// TTï¿½ï¿½ï¿½ï¿½
 bool ttLookup(uint64_t key, int depth, double alpha, double beta, double& val, pair<int, int>& bestMv) {
   auto it = transpositionTable.find(key);
   if (it == transpositionTable.end())
@@ -426,7 +428,7 @@ bool ttLookup(uint64_t key, int depth, double alpha, double beta, double& val, p
   return alpha >= beta;
 }
 
-// TT´æ´¢
+// TTï¿½æ´¢
 void ttStore(uint64_t key, int depth, double val, double alpha, double beta, pair<int, int> bestMv) {
   BoundType bt;
   if (val <= alpha)
@@ -439,7 +441,7 @@ void ttStore(uint64_t key, int depth, double val, double alpha, double beta, pai
   transpositionTable[key] = entry;
 }
 
-// ÅÅÐò(ÀúÊ·Æô·¢ + TT bestMove)
+// ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ + TT bestMove)
 void orderMoves(vector<pair<int, int>>& moves, const pair<int, int>& ttMove) {
   if (ttMove.first != -1) {
     auto it = find(moves.begin(), moves.end(), ttMove);
@@ -458,10 +460,10 @@ void orderMoves(vector<pair<int, int>>& moves, const pair<int, int>& ttMove) {
 
 /*
 ========================================
-  9. Minimax µ¥Ïß³Ì
+  9. Minimax ï¿½ï¿½ï¿½ß³ï¿½
 ========================================
 */
-// º¯ÊýÔ­ÐÍ
+// ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½
 pair<double, pair<int, int>> minimaxSingle(
     const Board& bd,
     int depth,
@@ -470,13 +472,13 @@ pair<double, pair<int, int>> minimaxSingle(
     bool maximizing);
 
 double doNullMove(const Board& bd, int depth, double alpha, double beta) {
-  // Ìø¹ý×Ô¼º => depth-2
+  // ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ => depth-2
   int R = 1;
   auto ret = minimaxSingle(bd, depth - 1 - R, alpha, beta, false);
   return ret.first;
 }
 
-// ÊÇ·ñÔÊÐí Null Move
+// ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ Null Move
 static bool allowNullMove = true;
 bool nullMoveAllowed(const Board& bd, int depth) {
   if (!allowNullMove)
@@ -486,7 +488,7 @@ bool nullMoveAllowed(const Board& bd, int depth) {
   return true;
 }
 
-// ºËÐÄµ¥Ïß³Ì minimax
+// ï¿½ï¿½ï¿½Äµï¿½ï¿½ß³ï¿½ minimax
 pair<double, pair<int, int>> minimaxSingle(
     const Board& bd,
     int depth,
@@ -503,7 +505,7 @@ pair<double, pair<int, int>> minimaxSingle(
     }
   }
 
-  // ÖÕÖ¹
+  // ï¿½ï¿½Ö¹
   double sc = evaluate(bd);
   if (fabs(sc) >= 99999999.0 || depth == 0 || isBoardFull(bd)) {
     return {sc, {-1, -1}};
@@ -585,7 +587,7 @@ pair<double, pair<int, int>> minimaxSingle(
 
 /*
 ========================================
- 10. µü´ú¼ÓÉî
+ 10. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ========================================
 */
 pair<double, pair<int, int>> searchBestMove(const Board& bd, int maxDepth, bool maximizing) {
@@ -604,11 +606,11 @@ pair<double, pair<int, int>> searchBestMove(const Board& bd, int maxDepth, bool 
 
 /*
 ========================================
- 11. µ¥²½±ØÉ±/·ÀÊØ
+ 11. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±/ï¿½ï¿½ï¿½ï¿½
 ========================================
 */
 pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
-  // AI±ØÉ±
+  // AIï¿½ï¿½É±
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (isValidMove(bd, r, c)) {
@@ -619,7 +621,7 @@ pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
       }
     }
   }
-  // ·ÀÊØ
+  // ï¿½ï¿½ï¿½ï¿½
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (isValidMove(bd, r, c)) {
@@ -635,14 +637,14 @@ pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
 
 /*
 ========================================
- 12. ´òÓ¡ÓëÖ÷Ñ­»·(ÈË»ú¶ÔÕ½) - µ¥Ïß³Ì
+ 12. ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½(ï¿½Ë»ï¿½ï¿½ï¿½Õ½) - ï¿½ï¿½ï¿½ß³ï¿½
 ========================================
 */
-// ´òÓ¡(µ×->¶¥)
+// ï¿½ï¿½Ó¡(ï¿½ï¿½->ï¿½ï¿½)
 void printBoard(const Board& bd) {
-  cout << "µ±Ç°ÆåÅÌ(µ×¡ú¶¥):\n";
-  // ÎÒÃÇÖ»ÄÜ´Ó topIndex[r][c] ÄæÏòorÕýÏòÕ¹Ê¾
-  // ÕâÀïÑÝÊ¾: bottom to top
+  cout << "ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½(ï¿½×¡ï¿½ï¿½ï¿½):\n";
+  // ï¿½ï¿½ï¿½ï¿½Ö»ï¿½Ü´ï¿½ topIndex[r][c] ï¿½ï¿½ï¿½ï¿½orï¿½ï¿½ï¿½ï¿½Õ¹Ê¾
+  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾: bottom to top
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       int h = bd.topIndex[r][c];
@@ -673,35 +675,34 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
-  // ³õÊ¼»¯
+  // ï¿½ï¿½Ê¼ï¿½ï¿½
   initZobrist();
   buildAllLines();
   memset(historyHeuristic, 0, sizeof(historyHeuristic));
 
-  // ½¨Á¢¿Õ¾ÖÃæ
+  // ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½
   Board board;
   // boardHash=0; black/whiteBB=0; topIndex=0
 
-  // ÏÈÊÖ=AI
+  // ï¿½ï¿½ï¿½ï¿½=AI
   char currentPlayer = AI;
-  int MAX_DEPTH = 9;
   bool aiFirstMoveDone = false;
 
   while (true) {
     printBoard(board);
     char w = checkWinner(board);
     if (w != '\0') {
-      cout << "ÓÎÏ·½áÊø, Ê¤Õß: " << w << "\n";
+      cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½, Ê¤ï¿½ï¿½: " << w << "\n";
       break;
     }
     if (isBoardFull(board)) {
-      cout << "ÆåÅÌÒÑÂú, Æ½¾Ö!\n";
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Æ½ï¿½ï¿½!\n";
       break;
     }
 
     if (currentPlayer == PLAYER) {
-      // ÈË×ß
-      cout << "ÇëÊäÈëÂä×Ó (ÐÐ ÁÐ),´Ó1¿ªÊ¼: " << flush;
+      // ï¿½ï¿½ï¿½ï¿½
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ ï¿½ï¿½),ï¿½ï¿½1ï¿½ï¿½Ê¼: " << flush;
       string line;
       if (!getline(cin, line))
         break;
@@ -715,14 +716,14 @@ int main() {
       rr--;
       cc--;
       if (!isValidMove(board, rr, cc)) {
-        cout << "·Ç·¨Âä×Ó,ÇëÖØÊÔ.\n";
+        cout << "ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.\n";
         continue;
       }
       board = makeMove(board, rr, cc, false /*white*/);
       currentPlayer = AI;
     } else {
       // AI
-      cout << "AIË¼¿¼ÖÐ...\n";
+      cout << "AIË¼ï¿½ï¿½ï¿½ï¿½...\n";
       double st = now_in_seconds();
       if (!aiFirstMoveDone) {
         auto ret = searchBestMove(board, MAX_DEPTH, true);
@@ -730,27 +731,27 @@ int main() {
         auto mv = ret.second;
         if (mv.first != -1) {
           board = makeMove(board, mv.first, mv.second, true);
-          cout << "AIµÚÒ»ÊÖ: ÐÐ" << mv.first + 1 << ",ÁÐ" << mv.second + 1
-               << ", ºÄÊ± " << sp << "s\n";
+          cout << "AIï¿½ï¿½Ò»ï¿½ï¿½: ï¿½ï¿½" << mv.first + 1 << ",ï¿½ï¿½" << mv.second + 1
+               << ", ï¿½ï¿½Ê± " << sp << "s\n";
         }
         aiFirstMoveDone = true;
       } else {
-        // µ¥²½±ØÉ±/·ÀÊØ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±/ï¿½ï¿½ï¿½ï¿½
         auto urgent = checkImmediateWinOrDefense(board);
         if (urgent.first != -1) {
           board = makeMove(board, urgent.first, urgent.second, true);
           double sp = now_in_seconds() - st;
-          cout << "¡¾AI½ô¼±²ßÂÔ¡¿Âä×Ó: ÐÐ" << urgent.first + 1
-               << ",ÁÐ" << urgent.second + 1
-               << ", ºÄÊ± " << sp << "s\n";
+          cout << "ï¿½ï¿½AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½" << urgent.first + 1
+               << ",ï¿½ï¿½" << urgent.second + 1
+               << ", ï¿½ï¿½Ê± " << sp << "s\n";
         } else {
           auto bestRet = searchBestMove(board, MAX_DEPTH, true);
           double sp = now_in_seconds() - st;
           double bestScore = bestRet.first;
           auto mv = bestRet.second;
           if (mv.first != -1) {
-            cout << "AIÂä×Ó: ÐÐ" << mv.first + 1 << ",ÁÐ" << mv.second + 1
-                 << ", ºÄÊ± " << sp << "s"
+            cout << "AIï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½" << mv.first + 1 << ",ï¿½ï¿½" << mv.second + 1
+                 << ", ï¿½ï¿½Ê± " << sp << "s"
                  << ", score=" << bestScore << "\n";
             board = makeMove(board, mv.first, mv.second, true);
           }
@@ -761,6 +762,6 @@ int main() {
   }
 
   printBoard(board);
-  cout << "ÓÎÏ·½áÊø!\n";
+  cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½!\n";
   return 0;
 }

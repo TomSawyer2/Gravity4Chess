@@ -12,21 +12,22 @@
 
 using namespace std;
 
-#define PLAYER 'B'  // Íæ¼Ò (°×Æå)
-#define AI 'W'      // AI (ºÚÆå)
+#define PLAYER 'B'  // ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)
+#define AI 'W'      // AI (ï¿½ï¿½ï¿½ï¿½)
 
 #define ROWS 5
 #define COLS 5
-#define MAX_STACK 5  // Ã¿¸ñ×î¶à¿É¶Ñµþ 5 ²ã
+#define MAX_STACK 5  // Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½É¶Ñµï¿½ 5 ï¿½ï¿½
+#define MAX_DEPTH 7
 
-// ×ªÈ¦¶¯»­ÓÃ
+// ×ªÈ¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 vector<string> spinner = {"|", "/", "-", "\\"};
 
-// ÓÃÓÚÆåÅÌ×´Ì¬¹þÏ£
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½Ï£
 unordered_map<string, tuple<int, int, int, int, pair<int, int>>> transposition_table;
 
-int nodes_explored = 0;       // ±¾´ÎËÑË÷ÒÑ·ÃÎÊµÄ½ÚµãÊý
-double search_start_time = 0; // ±¾´ÎËÑË÷¿ªÊ¼Ê±¼ä
+int nodes_explored = 0;       // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½ÊµÄ½Úµï¿½ï¿½ï¿½
+double search_start_time = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½
 
 struct Board {
     vector<vector<vector<char>>> grid;
@@ -69,7 +70,7 @@ struct Board {
     }
 
     string hash_board() {
-        return board_to_str(); // ÔÚ C++ ÖÐÖ±½ÓÊ¹ÓÃ board_str ×÷Îª¹þÏ£¼ü
+        return board_to_str(); // ï¿½ï¿½ C++ ï¿½ï¿½Ö±ï¿½ï¿½Ê¹ï¿½ï¿½ board_str ï¿½ï¿½Îªï¿½ï¿½Ï£ï¿½ï¿½
     }
 
     bool check_winner() {
@@ -100,7 +101,7 @@ struct Board {
                             }
                         }
                         if (chain_count >= 4) {
-                            return true; // ÕÒµ½Ó®¼Ò
+                            return true; // ï¿½Òµï¿½Ó®ï¿½ï¿½
                         }
                     }
                 }
@@ -110,7 +111,7 @@ struct Board {
     }
 };
 
-// ÓÃÓÚÆÀ¹ÀµÄÄ£Ê½Æ¥Åä±í
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Æ¥ï¿½ï¿½ï¿½
 unordered_map<string, int> black_pattern_score = {
     {"BBBB", 9999999}, {"BBB-", 5000}, {"BB-B", 5000}, {"B-BB", 5000}, {"-BBB", 5000},
     {"BB--", 200}, {"B-B-", 150}, {"B--B", 100}, {"-BB-", 200}, {"B---", 10}, {"-B--", 10}, {"--B-", 10}, {"---B", 10}, {"----", 0}
@@ -121,7 +122,7 @@ unordered_map<string, int> white_pattern_score = {
     {"WW--", 200}, {"W-W-", 150}, {"W--W", 100}, {"-WW-", 200}, {"W---", 10}, {"-W--", 10}, {"--W-", 10}, {"---W", 10}, {"----", 0}
 };
 
-// »ñÈ¡ËùÓÐÏß¶Î£¨¿ÉÒÔÊÇ 4 Á¬Ïß£©
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ß¶Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ï¿½ß£ï¿½
 vector<vector<pair<int, int>>> get_all_lines(Board& board) {
     const vector<pair<int, int>> directions = {
         {0, 1}, {1, 0}, {1, 1}, {1, -1}, {0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1},
@@ -157,7 +158,7 @@ vector<vector<pair<int, int>>> get_all_lines(Board& board) {
 
 int evaluate(Board& board) {
     if (board.check_winner()) {
-        return AI == 'W' ? 99999999 : -99999999; // AI Ê¤Àû
+        return AI == 'W' ? 99999999 : -99999999; // AI Ê¤ï¿½ï¿½
     }
 
     int ai_potential = 0;
@@ -192,11 +193,11 @@ int evaluate(Board& board) {
     return ai_potential - player_potential;
 }
 
-// »ñÈ¡×îÓÅ²½·¨µÄ minimax
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½Å²ï¿½ï¿½ï¿½ï¿½ï¿½ minimax
 pair<int, pair<int, int>> minimax(Board& board, int depth, int alpha, int beta, bool maximizing) {
     nodes_explored++;
 
-    // ÖÃ»»±í
+    // ï¿½Ã»ï¿½ï¿½ï¿½
     string bkey = board.hash_board();
     if (transposition_table.find(bkey) != transposition_table.end()) {
         auto [stored_depth, stored_alpha, stored_beta, stored_val, stored_move] = transposition_table[bkey];
@@ -276,7 +277,6 @@ int main() {
     Board board;
     bool ai_first_move_done = false;
     int current_player = PLAYER;
-    int max_depth = 5;
 
     while (true) {
         print_board(board);
@@ -302,7 +302,7 @@ int main() {
             current_player = AI;
         } else {
             cout << "AI is calculating..." << endl;
-            pair<int, pair<int, int>> move = minimax(board, max_depth, -INT_MAX, INT_MAX, true);
+            pair<int, pair<int, int>> move = minimax(board, MAX_DEPTH, -INT_MAX, INT_MAX, true);
             board.make_move(move.second.first, move.second.second, AI);
             current_player = PLAYER;
         }

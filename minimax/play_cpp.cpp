@@ -1,6 +1,6 @@
 #include <bits/stdc++.h> 
-// Èç¹û±àÒëÆ÷»ò»·¾³²»Ö§³Ö <bits/stdc++.h>£¬
-// Çë×ÔÐÐ°üº¬ËùÐèÍ·ÎÄ¼þ£¬Èç:
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò»·¾ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ <bits/stdc++.h>ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ð°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½:
 // #include <iostream>
 // #include <vector>
 // #include <string>
@@ -20,11 +20,11 @@
 using namespace std;
 
 /*
- * ÎªÁËÓë Python hashlib.md5 Ò»ÖÂ£¬ÕâÀïÄÚÖÃÁËÒ»¸ö¼òµ¥µÄ MD5 ÊµÏÖ¡£
- * ÈôÄãµÄ»·¾³¿ÉÓÃ OpenSSL »òÆäËû MD5 ¿â£¬¿ÉÒÔÖ±½Óµ÷ÓÃ¿âº¯Êý¡£
+ * Îªï¿½ï¿½ï¿½ï¿½ Python hashlib.md5 Ò»ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½òµ¥µï¿½ MD5 Êµï¿½Ö¡ï¿½
+ * ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ OpenSSL ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MD5 ï¿½â£¬ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Óµï¿½ï¿½Ã¿âº¯ï¿½ï¿½ï¿½ï¿½
  */
 
-// =============== ¿ªÊ¼£ºMD5 Ïà¹Ø ===============
+// =============== ï¿½ï¿½Ê¼ï¿½ï¿½MD5 ï¿½ï¿½ï¿½ ===============
 namespace {
 static const uint32_t MD5_INIT_STATE[4] = {
     0x67452301UL, 0xEFCDAB89UL,
@@ -91,30 +91,30 @@ static inline uint32_t to_uint32(const uint8_t *bytes) {
 
 std::string md5(const std::string &input)
 {
-    // ³õÊ¼»¯
+    // ï¿½ï¿½Ê¼ï¿½ï¿½
     uint32_t h[4];
     for (int i = 0; i < 4; i++) {
         h[i] = MD5_INIT_STATE[i];
     }
 
-    // Ô¤´¦Àí
+    // Ô¤ï¿½ï¿½ï¿½ï¿½
     uint64_t message_len_bits = (uint64_t) input.size() * 8;
-    // ¸´ÖÆÊäÈëÊý¾Ý
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     std::vector<uint8_t> msg(input.begin(), input.end());
-    // Ìí¼Ó 0x80
+    // ï¿½ï¿½ï¿½ï¿½ 0x80
     msg.push_back(0x80);
-    // Ìí¼Ó 0x00£¬Ö±µ½³¤¶È mod 64 = 56
+    // ï¿½ï¿½ï¿½ï¿½ 0x00ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ mod 64 = 56
     while ((msg.size() % 64) != 56) {
         msg.push_back(0x00);
     }
-    // Ìí¼ÓÔ­Ê¼³¤¶È£¨64bit£¬µÍÎ»ÔÚÇ°£©
+    // ï¿½ï¿½ï¿½ï¿½Ô­Ê¼ï¿½ï¿½ï¿½È£ï¿½64bitï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½Ç°ï¿½ï¿½
     uint8_t length_bytes[8];
     to_bytes(message_len_bits, length_bytes);
     for (int i = 0; i < 8; i++) {
         msg.push_back(length_bytes[i]);
     }
 
-    // Ã¿ 64 ×Ö½Ú´¦Àí
+    // Ã¿ 64 ï¿½Ö½Ú´ï¿½ï¿½ï¿½
     for (size_t offset = 0; offset < msg.size(); offset += 64) {
         uint32_t a = h[0];
         uint32_t b = h[1];
@@ -127,8 +127,8 @@ std::string md5(const std::string &input)
             M[i] = to_uint32(chunk + i * 4);
         }
 
-        // 64 ÂÖ
-        // µÚÒ»ÂÖ
+        // 64 ï¿½ï¿½
+        // ï¿½ï¿½Ò»ï¿½ï¿½
         FF(a, b, c, d, M[0],  7,  MD5_SINE_TABLE[0]);
         FF(d, a, b, c, M[1],  12, MD5_SINE_TABLE[1]);
         FF(c, d, a, b, M[2],  17, MD5_SINE_TABLE[2]);
@@ -146,7 +146,7 @@ std::string md5(const std::string &input)
         FF(c, d, a, b, M[14], 17, MD5_SINE_TABLE[14]);
         FF(b, c, d, a, M[15], 22, MD5_SINE_TABLE[15]);
 
-        // µÚ¶þÂÖ
+        // ï¿½Ú¶ï¿½ï¿½ï¿½
         GG(a, b, c, d, M[1],  5,  MD5_SINE_TABLE[16]);
         GG(d, a, b, c, M[6],  9,  MD5_SINE_TABLE[17]);
         GG(c, d, a, b, M[11], 14, MD5_SINE_TABLE[18]);
@@ -164,7 +164,7 @@ std::string md5(const std::string &input)
         GG(c, d, a, b, M[7],  14, MD5_SINE_TABLE[30]);
         GG(b, c, d, a, M[12], 20, MD5_SINE_TABLE[31]);
 
-        // µÚÈýÂÖ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         HH(a, b, c, d, M[5],  4,  MD5_SINE_TABLE[32]);
         HH(d, a, b, c, M[8],  11, MD5_SINE_TABLE[33]);
         HH(c, d, a, b, M[11], 16, MD5_SINE_TABLE[34]);
@@ -182,7 +182,7 @@ std::string md5(const std::string &input)
         HH(c, d, a, b, M[15], 16, MD5_SINE_TABLE[46]);
         HH(b, c, d, a, M[2],  23, MD5_SINE_TABLE[47]);
 
-        // µÚËÄÂÖ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         II(a, b, c, d, M[0],  6,  MD5_SINE_TABLE[48]);
         II(d, a, b, c, M[7],  10, MD5_SINE_TABLE[49]);
         II(c, d, a, b, M[14], 15, MD5_SINE_TABLE[50]);
@@ -200,14 +200,14 @@ std::string md5(const std::string &input)
         II(c, d, a, b, M[2],  15, MD5_SINE_TABLE[62]);
         II(b, c, d, a, M[9],  21, MD5_SINE_TABLE[63]);
 
-        // ¸üÐÂ
+        // ï¿½ï¿½ï¿½ï¿½
         h[0] += a;
         h[1] += b;
         h[2] += c;
         h[3] += d;
     }
 
-    // Êä³ö½á¹û
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     std::ostringstream oss;
     for (int i = 0; i < 4; i++) {
         for (int shift = 0; shift < 32; shift += 8) {
@@ -217,22 +217,23 @@ std::string md5(const std::string &input)
     }
     return oss.str();
 }
-// =============== ½áÊø£ºMD5 Ïà¹Ø ===============
+// =============== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MD5 ï¿½ï¿½ï¿½ ===============
 
-// È«¾Ö³£Á¿
-static const char PLAYER = 'W'; // Íæ¼Ò(°×Æå)
-static const char AI     = 'B'; // AI(ºÚÆå)
+// È«ï¿½Ö³ï¿½ï¿½ï¿½
+static const char PLAYER = 'W'; // ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)
+static const char AI     = 'B'; // AI(ï¿½ï¿½ï¿½ï¿½)
 
 static const int ROWS = 5;
 static const int COLS = 5;
-static const int MAX_STACK = 5; // Ã¿¸ñ×î¶à¶Ñµþ 5 ²ã
+static const int MAX_STACK = 5; // Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ 5 ï¿½ï¿½
+static const int MAX_DEPTH = 7;
 
-// È«¾Ö±äÁ¿
-static long long nodes_explored = 0;       // ±¾´ÎËÑË÷ÒÑ·ÃÎÊµÄ½ÚµãÊý
-static double search_start_time = 0.0;     // ±¾´ÎËÑË÷¿ªÊ¼Ê±¼ä (Ãë)
-static vector<string> spinner = {"|", "/", "-", "\\"}; // ×ªÈ¦¶¯»­·ûºÅ
+// È«ï¿½Ö±ï¿½ï¿½ï¿½
+static long long nodes_explored = 0;       // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½ÊµÄ½Úµï¿½ï¿½ï¿½
+static double search_start_time = 0.0;     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼Ê±ï¿½ï¿½ (ï¿½ï¿½)
+static vector<string> spinner = {"|", "/", "-", "\\"}; // ×ªÈ¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-// ÖÃ»»±í½á¹¹
+// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½á¹¹
 struct TranspositionEntry {
     int depth;
     double alpha;
@@ -241,34 +242,34 @@ struct TranspositionEntry {
     pair<int,int> bestMove;
 };
 
-// Ê¹ÓÃ unordered_map ÊµÏÖÖÃ»»±í
+// Ê¹ï¿½ï¿½ unordered_map Êµï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
 static unordered_map<string, TranspositionEntry> transposition_table;
 
 
-//==================== ÆåÅÌÏà¹Øº¯Êý ====================
+//==================== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ ====================
 
-// ÈýÎ¬ÆåÅÌ£ºboard[r][c] ÊÇÒ»¸ö vector<char>£¬±íÊ¾¸Ã¸ñ¶ÑµþµÄËùÓÐÆå×Ó
-// ÆäÖÐ×îµ×²ãÎª board[r][c][0], ×î¶¥²ãÎª board[r][c].back()
+// ï¿½ï¿½Î¬ï¿½ï¿½ï¿½Ì£ï¿½board[r][c] ï¿½ï¿½Ò»ï¿½ï¿½ vector<char>ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ã¸ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½Îª board[r][c][0], ï¿½î¶¥ï¿½ï¿½Îª board[r][c].back()
 
-// ´´½¨¿ÕÆåÅÌ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 vector<vector<vector<char>>> create_board() {
     return vector<vector<vector<char>>>(ROWS, vector<vector<char>>(COLS, vector<char>()));
 }
 
-// ¼ì²é¸ÃÎ»ÖÃ (row, col) ÊÇ·ñ¿É·Å×Ó
+// ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ (row, col) ï¿½Ç·ï¿½É·ï¿½ï¿½ï¿½
 bool is_valid_move(const vector<vector<vector<char>>>& board, int row, int col) {
     if (row < 0 || row >= ROWS || col < 0 || col >= COLS) return false;
     return (int)board[row][col].size() < MAX_STACK;
 }
 
-// Âä×Ó£¬·µ»ØÐÂµÄÆåÅÌ
+// ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½
 vector<vector<vector<char>>> make_move(const vector<vector<vector<char>>>& board, int row, int col, char piece) {
-    vector<vector<vector<char>>> new_board = board; // Éî¸´ÖÆ
+    vector<vector<vector<char>>> new_board = board; // ï¿½î¸´ï¿½ï¿½
     new_board[row][col].push_back(piece);
     return new_board;
 }
 
-// ¼ì²éÆåÅÌÊÇ·ñÒÑ¾­Âú
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½
 bool is_board_full(const vector<vector<vector<char>>>& board) {
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
@@ -280,16 +281,16 @@ bool is_board_full(const vector<vector<vector<char>>>& board) {
     return true;
 }
 
-// ½«ÆåÅÌ×ªÎª¿ÉÉ¢ÁÐ×Ö·û´®
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªÎªï¿½ï¿½É¢ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 string board_to_str(const vector<vector<vector<char>>>& board) {
-    // PythonÖÐ×ö·¨£ºÃ¿Ò»¸ñÓÃ  stack_str + '|'  Æ´½Ó£¬È»ºóÐÐÖ®¼äÓÃ '#'£¬×îºóÕû¸öÓÃ "##" Æ´½Ó
-    // ÕâÀïÒ²¾¡Á¿±£³ÖÍ¬ÑùÂß¼­
-    // ÐÎÈç: (¸ñ1ÄÚÈÝ)|#(¸ñ2ÄÚÈÝ)|#...##(ÏÂÒ»ÐÐ)
-    // ÎªÁËºÍ python ÍêÈ«Ò»ÖÂ£¬¾¡Á¿Ä£·ÂÆä¸ñÊ½
+    // Pythonï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½ï¿½ï¿½  stack_str + '|'  Æ´ï¿½Ó£ï¿½È»ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ '#'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "##" Æ´ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ß¼ï¿½
+    // ï¿½ï¿½ï¿½ï¿½: (ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½)|#(ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½)|#...##(ï¿½ï¿½Ò»ï¿½ï¿½)
+    // Îªï¿½Ëºï¿½ python ï¿½ï¿½È«Ò»ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
     ostringstream oss;
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
-            // Æ´½Ó¸Ã stack
+            // Æ´ï¿½Ó¸ï¿½ stack
             for (char ch : board[r][c]) {
                 oss << ch;
             }
@@ -305,15 +306,15 @@ string board_to_str(const vector<vector<vector<char>>>& board) {
     return oss.str();
 }
 
-// ¶ÔÆåÅÌ×ö MD5 ²¢·µ»ØÊ®Áù½øÖÆ×Ö·û´®
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MD5 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 string hash_board(const vector<vector<vector<char>>>& board) {
     return md5(board_to_str(board));
 }
 
-//==================== »ñÊ¤¼ì²â ====================
-// Èç¹ûÓÐÈÎÒâÒ»·½ÐÎ³É 4 Á¬ÏßÔò·µ»Ø 'W' or 'B'£¬·ñÔò·µ»Ø '\0'
+//==================== ï¿½ï¿½Ê¤ï¿½ï¿½ï¿½ ====================
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Î³ï¿½ 4 ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½ 'W' or 'B'ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½ '\0'
 char check_winner(const vector<vector<vector<char>>>& board) {
-    // ÈýÎ¬·½Ïò¼¯ºÏ
+    // ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ò¼¯ºï¿½
     vector<array<int,3>> directions_3d = {
         {0,1,0}, {1,0,0}, {1,1,0}, {1,-1,0},
         {0,0,1}, {1,0,1}, {-1,0,1},
@@ -360,9 +361,9 @@ char check_winner(const vector<vector<vector<char>>>& board) {
     return '\0';
 }
 
-//==================== Ä£Ê½Æ¥Åä´ò·Ö ====================
+//==================== Ä£Ê½Æ¥ï¿½ï¿½ï¿½ï¿½ ====================
 
-// ¶ÔÓ¦ Python ÖÐ black_pattern_score
+// ï¿½ï¿½Ó¦ Python ï¿½ï¿½ black_pattern_score
 static unordered_map<string, int> black_pattern_score = {
     {"BBBB", 9999999},
     {"BBB-", 5000}, {"BB-B", 5000}, {"B-BB", 5000}, {"-BBB", 5000},
@@ -371,7 +372,7 @@ static unordered_map<string, int> black_pattern_score = {
     {"----", 0}
 };
 
-// ¶ÔÓ¦ Python ÖÐ white_pattern_score
+// ï¿½ï¿½Ó¦ Python ï¿½ï¿½ white_pattern_score
 static unordered_map<string, int> white_pattern_score = {
     {"WWWW", 9999999},
     {"WWW-", 5000}, {"WW-W", 5000}, {"W-WW", 5000}, {"-WWW", 5000},
@@ -380,7 +381,7 @@ static unordered_map<string, int> white_pattern_score = {
     {"----", 0}
 };
 
-// »ñÈ¡ÆåÅÌÉÏËùÓÐ 4 Á¬×ø±êÏß£¬Ã¿ÌõÏß°üº¬ 4 ¸ö (r,c,l)
+// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½Ã¿ï¿½ï¿½ï¿½ß°ï¿½ï¿½ï¿½ 4 ï¿½ï¿½ (r,c,l)
 vector<vector<array<int,3>>> get_all_lines(const vector<vector<vector<char>>>& board) {
     vector<array<int,3>> directions_3d = {
         {0,1,0}, {1,0,0}, {1,1,0}, {1,-1,0},
@@ -390,8 +391,8 @@ vector<vector<array<int,3>>> get_all_lines(const vector<vector<vector<char>>>& b
     };
 
     vector<vector<array<int,3>>> lines;
-    // Ã¶¾ÙÃ¿¸ö¿ÉÄÜµÄÆðµã + Ã¿¸ö·½Ïò
-    // ÈôÄÜÈ¡µ½³¤¶È = 4 µÄÐòÁÐ£¬Ôò¼ÓÈëµ½ lines
+    // Ã¶ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ + Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ = 4 ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ëµ½ lines
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             int stack_height = (int)board[r][c].size();
@@ -423,9 +424,9 @@ vector<vector<array<int,3>>> get_all_lines(const vector<vector<vector<char>>>& b
     return lines;
 }
 
-// ÆÀ¹Àº¯Êý
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 double evaluate(const vector<vector<vector<char>>>& board) {
-    // Èô³öÏÖ±ØÊ¤¾ÖÃæÔòÁ¢¼´·µ»Ø¼«Öµ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ê¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½Öµ
     char w = check_winner(board);
     if (w == AI) {
         return 99999999.0;
@@ -433,14 +434,14 @@ double evaluate(const vector<vector<vector<char>>>& board) {
         return -99999999.0;
     }
 
-    // ·ñÔò°´ÕÕÄ£Ê½Æ¥Åä´ò·Ö
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½Æ¥ï¿½ï¿½ï¿½ï¿½
     long long ai_potential = 0;
     long long player_potential = 0;
 
     vector<vector<array<int,3>>> lines = get_all_lines(board);
     for (auto &lineCoords : lines) {
-        // ÊÕ¼¯Õâ4¸ñµÄÆå×ÓÇé¿ö
-        // ÐÎÈç: [ 'W', 'W', 'W', (null) ] -> ¿ÉÄÜÒ²ÓÐ¿Õ
+        // ï¿½Õ¼ï¿½ï¿½ï¿½4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½: [ 'W', 'W', 'W', (null) ] -> ï¿½ï¿½ï¿½ï¿½Ò²ï¿½Ð¿ï¿½
         vector<char> pieces;
         for (auto &coord : lineCoords) {
             int rr = coord[0];
@@ -452,35 +453,35 @@ double evaluate(const vector<vector<vector<char>>>& board) {
                 pieces.push_back('\0');
             }
         }
-        // ¼ì²éÊÇ·ñº¬ÓÐ 'B' ºÍ 'W' Í¬Ê±³öÏÖ
+        // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ 'B' ï¿½ï¿½ 'W' Í¬Ê±ï¿½ï¿½ï¿½ï¿½
         bool hasB = false, hasW = false;
         for (char p : pieces) {
             if (p == AI) hasB = true;
             if (p == PLAYER) hasW = true;
         }
-        // ÈôÁ½Õß¶¼´æÔÚ£¬Ôò¶ÔË«·½¶¼ÎÞ¹±Ï×
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½Ë«ï¿½ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½
         if (hasB && hasW) {
             continue;
         }
-        // ¹¹½¨Ä£Ê½×Ö·û´®£¨ºÍ Python Ò»ÖÂ£ºAI->'B', PLAYER->'W', ¿Õ->'-'£©
-        // ×¢Òâ£ºPython ´úÂëÀï AI='W', PLAYER='B' (Ê¾ÀýÖÐ)£¬Äã¿ÉÒÔ¸ù¾ÝÐèÒªµ÷Õû¡£
-        // µ«ÕâÀïÎªÁËÎ¬³ÖÒ»ÖÂ£¬ÐèÒªÔÙÈýÈ·ÈÏ£ºÉÏÃæ¶¨Òå£ºPLAYER='B', AI='W'£¿
-        // Python Ô­ÂëÐ´µÄÊÇ PLAYER='B', AI='W'£¬ÄÇ evaluate ÀïÈ´Ð´ÁË pattern ÖÐ 'B' if p==AI ...
-        // ÆäÊµ Python ÀïÊÇ£ºAI='W' => 'B' if p==AI ... ËÆºõÊÇÒ»ÖÖ"·´×ª"¡£
-        // ²»¹ýÖ»ÒªÓë black_pattern_score, white_pattern_score ¶ÔÓ¦ºÃ¼´¿É¡£
-        // ÕâÀïÑÏ¸ñÕÕ×Å Python ´úÂëÖÐµÄÐ´·¨£º
+        // ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Python Ò»ï¿½Â£ï¿½AI->'B', PLAYER->'W', ï¿½ï¿½->'-'ï¿½ï¿½
+        // ×¢ï¿½â£ºPython ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ AI='W', PLAYER='B' (Ê¾ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Î¬ï¿½ï¿½Ò»ï¿½Â£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½È·ï¿½Ï£ï¿½ï¿½ï¿½ï¿½æ¶¨ï¿½å£ºPLAYER='B', AI='W'ï¿½ï¿½
+        // Python Ô­ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ PLAYER='B', AI='W'ï¿½ï¿½ï¿½ï¿½ evaluate ï¿½ï¿½È´Ð´ï¿½ï¿½ pattern ï¿½ï¿½ 'B' if p==AI ...
+        // ï¿½ï¿½Êµ Python ï¿½ï¿½ï¿½Ç£ï¿½AI='W' => 'B' if p==AI ... ï¿½Æºï¿½ï¿½ï¿½Ò»ï¿½ï¿½"ï¿½ï¿½×ª"ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½Ö»Òªï¿½ï¿½ black_pattern_score, white_pattern_score ï¿½ï¿½Ó¦ï¿½Ã¼ï¿½ï¿½É¡ï¿½
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ Python ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ð´ï¿½ï¿½ï¿½ï¿½
         //   pattern = 'B' if p==AI else ('W' if p==PLAYER else '-')
         
         ostringstream pattern_oss;
         for (char p : pieces) {
             if (p == AI) {
-                // AI='W'£¬µ«ÔÚ pattern ÖÐÒªÐ´ 'B' ?
-                // Python ´úÂëÈ·ÊµÕâÃ´Ð´ÁË£º 'B' if p==AI ...
-                // Õâ¿´ÉÏÈ¥ºÜÅ¡°Í£¬µ«ÎªÁËÓëÔ­ Python ´úÂëÊä³öÒ»Ä£Ò»Ñù£¬Ö»ÄÜÕÕ×ö
+                // AI='W'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ pattern ï¿½ï¿½ÒªÐ´ 'B' ?
+                // Python ï¿½ï¿½ï¿½ï¿½È·Êµï¿½ï¿½Ã´Ð´ï¿½Ë£ï¿½ 'B' if p==AI ...
+                // ï¿½â¿´ï¿½ï¿½È¥ï¿½ï¿½Å¡ï¿½Í£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½Ô­ Python ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ä£Ò»ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 pattern_oss << 'B';
             }
             else if (p == PLAYER) {
-                // PLAYER='B' => ÔÚ pattern ÖÐÐ´ 'W'
+                // PLAYER='B' => ï¿½ï¿½ pattern ï¿½ï¿½Ð´ 'W'
                 pattern_oss << 'W';
             }
             else {
@@ -489,14 +490,14 @@ double evaluate(const vector<vector<vector<char>>>& board) {
         }
         string pattern = pattern_oss.str();
 
-        // ¼ÆËã¼Ó·Ö
+        // ï¿½ï¿½ï¿½ï¿½Ó·ï¿½
         if (pattern.find('B') != string::npos && pattern.find('W') == string::npos) {
-            // Ö»ÓÐB (AI) 
+            // Ö»ï¿½ï¿½B (AI) 
             if (black_pattern_score.count(pattern)) {
                 ai_potential += black_pattern_score[pattern];
             }
         } else if (pattern.find('W') != string::npos && pattern.find('B') == string::npos) {
-            // Ö»ÓÐW (Íæ¼Ò)
+            // Ö»ï¿½ï¿½W (ï¿½ï¿½ï¿½)
             if (white_pattern_score.count(pattern)) {
                 player_potential += white_pattern_score[pattern];
             }
@@ -508,7 +509,7 @@ double evaluate(const vector<vector<vector<char>>>& board) {
 
 //==================== Minimax + Alpha-Beta ====================
 
-// »ñÈ¡µ±Ç°Ê±¼ä (Ãë)
+// ï¿½ï¿½È¡ï¿½ï¿½Ç°Ê±ï¿½ï¿½ (ï¿½ï¿½)
 double now_in_seconds() {
     using namespace std::chrono;
     auto tp = high_resolution_clock::now();
@@ -520,46 +521,46 @@ pair<double,pair<int,int>> minimax(
     const vector<vector<vector<char>>>& board, 
     int depth, double alpha, double beta, bool maximizing
 ) {
-    // ½Úµã¼ÆÊý
+    // ï¿½Úµï¿½ï¿½ï¿½ï¿½
     nodes_explored += 1;
 
-    // Ã¿·ÃÎÊÒ»¶¨ãÐÖµ½Úµã¾ÍË¢ÐÂ¡°×ªÈ¦¶¯»­¡±
+    // Ã¿ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Öµï¿½Úµï¿½ï¿½Ë¢ï¿½Â¡ï¿½×ªÈ¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     static const long long refresh_threshold = 200;
     if (nodes_explored % refresh_threshold == 0) {
         double spent = now_in_seconds() - search_start_time;
-        // ¼ÆËã×ªÈ¦×Ö·û
+        // ï¿½ï¿½ï¿½ï¿½×ªÈ¦ï¿½Ö·ï¿½
         // spinner[(nodes_explored // refresh_threshold) % len(spinner)]
         int idx = (int)((nodes_explored / refresh_threshold) % spinner.size());
         string spin_char = spinner[idx];
-        // \r»Øµ½ÐÐÊ×¸²¸Ç
-        cerr << "\r\033[90m[AIËÑË÷] " << spin_char
-             << "  ÒÑ·ÃÎÊ½Úµã=" << nodes_explored
-             << ", ºÄÊ±=" << fixed << setprecision(2) << spent << "s\033[0m";
+        // \rï¿½Øµï¿½ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½
+        cerr << "\r\033[90m[AIï¿½ï¿½ï¿½ï¿½] " << spin_char
+             << "  ï¿½Ñ·ï¿½ï¿½Ê½Úµï¿½=" << nodes_explored
+             << ", ï¿½ï¿½Ê±=" << fixed << setprecision(2) << spent << "s\033[0m";
         cerr.flush();
     }
 
-    // ÖÃ»»±í²éÕÒ
+    // ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     string bkey = hash_board(board);
     if (transposition_table.count(bkey)) {
         auto &entry = transposition_table[bkey];
-        // ÈôÂú×ãÏàÍ¬»ò¸üÉî²ã && alpha/beta ·¶Î§¼æÈÝ£¬ÔòÖ±½Ó·µ»Ø
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ && alpha/beta ï¿½ï¿½Î§ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½
         if (entry.depth >= depth && entry.alpha <= alpha && entry.beta >= beta) {
             return { entry.value, entry.bestMove };
         }
     }
 
-    // ¼ì²éÖÕÖ¹Ìõ¼þ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½
     double score = evaluate(board);
     if (fabs(score) >= 99999999.0 || depth == 0 || is_board_full(board)) {
         return { score, { -1, -1 } };
     }
 
-    // alpha-beta ËÑË÷
+    // alpha-beta ï¿½ï¿½ï¿½ï¿½
     if (maximizing) {
         double best_val = -numeric_limits<double>::infinity();
         pair<int,int> best_move = { -1, -1 };
 
-        // »ñÈ¡ËùÓÐ¿ÉÐÐ²½
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ð²ï¿½
         vector<pair<int,int>> moves;
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
@@ -568,7 +569,7 @@ pair<double,pair<int,int>> minimax(
                 }
             }
         }
-        // ¼òµ¥ÅÅÐò£¬ÈÃ¿¿½üÖÐÐÄµÄ²½ÓÅÏÈ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄµÄ²ï¿½ï¿½ï¿½ï¿½ï¿½
         int center_r = ROWS / 2;
         int center_c = COLS / 2;
         sort(moves.begin(), moves.end(), [=](auto &m1, auto &m2){
@@ -589,11 +590,11 @@ pair<double,pair<int,int>> minimax(
             }
             alpha = max(alpha, best_val);
             if (alpha >= beta) {
-                break; // ¼ôÖ¦
+                break; // ï¿½ï¿½Ö¦
             }
         }
 
-        // ´æÈëÖÃ»»±í
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
         TranspositionEntry newEntry = { depth, alpha, beta, best_val, best_move };
         transposition_table[bkey] = newEntry;
 
@@ -602,7 +603,7 @@ pair<double,pair<int,int>> minimax(
         double best_val = numeric_limits<double>::infinity();
         pair<int,int> best_move = { -1, -1 };
 
-        // »ñÈ¡ËùÓÐ¿ÉÐÐ²½
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ð²ï¿½
         vector<pair<int,int>> moves;
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
@@ -611,7 +612,7 @@ pair<double,pair<int,int>> minimax(
                 }
             }
         }
-        // Í¬ÑùÅÅÐò
+        // Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         int center_r = ROWS / 2;
         int center_c = COLS / 2;
         sort(moves.begin(), moves.end(), [=](auto &m1, auto &m2){
@@ -632,11 +633,11 @@ pair<double,pair<int,int>> minimax(
             }
             beta = min(beta, best_val);
             if (alpha >= beta) {
-                break; // ¼ôÖ¦
+                break; // ï¿½ï¿½Ö¦
             }
         }
 
-        // ´æÈëÖÃ»»±í
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½
         TranspositionEntry newEntry = { depth, alpha, beta, best_val, best_move };
         transposition_table[bkey] = newEntry;
 
@@ -644,11 +645,11 @@ pair<double,pair<int,int>> minimax(
     }
 }
 
-// µü´ú¼ÓÉîËÑË÷
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 pair<double, pair<int,int>> search_best_move(const vector<vector<vector<char>>>& board, int max_depth, bool maximizing) {
     double best_score = 0.0;
     pair<int,int> best_move = { -1, -1 };
-    // µü´ú¼ÓÉî
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     for (int d = 1; d <= max_depth; d++) {
         auto ret = minimax(board, d, -numeric_limits<double>::infinity(), numeric_limits<double>::infinity(), maximizing);
         double val = ret.first;
@@ -657,7 +658,7 @@ pair<double, pair<int,int>> search_best_move(const vector<vector<vector<char>>>&
             best_score = val;
             best_move = mv;
         }
-        // ÈôÒÑ´ïÊ¤¸º¼«Öµ£¬Í£Ö¹
+        // ï¿½ï¿½ï¿½Ñ´ï¿½Ê¤ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Í£Ö¹
         if (fabs(best_score) >= 99999999.0) {
             break;
         }
@@ -665,9 +666,9 @@ pair<double, pair<int,int>> search_best_move(const vector<vector<vector<char>>>&
     return { best_score, best_move };
 }
 
-//==================== µ¥²½±ØÉ±/·ÀÊØ ====================
+//==================== ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±/ï¿½ï¿½ï¿½ï¿½ ====================
 pair<int,int> check_immediate_win_or_defense(const vector<vector<vector<char>>>& board) {
-    // AI µ¥²½±ØÉ±
+    // AI ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É±
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             if (is_valid_move(board, r, c)) {
@@ -678,7 +679,7 @@ pair<int,int> check_immediate_win_or_defense(const vector<vector<vector<char>>>&
             }
         }
     }
-    // ·ÀÊØ¶ÔÊÖ
+    // ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             if (is_valid_move(board, r, c)) {
@@ -692,9 +693,9 @@ pair<int,int> check_immediate_win_or_defense(const vector<vector<vector<char>>>&
     return {-1, -1};
 }
 
-//==================== ´òÓ¡/½»»¥Âß¼­ ====================
+//==================== ï¿½ï¿½Ó¡/ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ ====================
 void print_board(const vector<vector<vector<char>>>& board) {
-    cout << "µ±Ç°ÆåÅÌ£¨µ×¡ú¶¥£©:" << endl;
+    cout << "ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ì£ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½ï¿½:" << endl;
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
             if (board[r][c].empty()) {
@@ -716,35 +717,34 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    // ³õÊ¼»¯
+    // ï¿½ï¿½Ê¼ï¿½ï¿½
     auto board = create_board();
     char current_player = AI;
-    int MAX_DEPTH = 7;
 
-    // ÓÃÓÚÄ£Äâ Python Àï AI ÊÇ·ñµÚÒ»ÊÖ
+    // ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ Python ï¿½ï¿½ AI ï¿½Ç·ï¿½ï¿½Ò»ï¿½ï¿½
     bool ai_first_move_done = false; 
 
     while (true) {
         print_board(board);
         char w = check_winner(board);
         if (w != '\0') {
-            cout << "ÓÎÏ·½áÊø£¬Ê¤Õß£º" << w << endl;
+            cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¤ï¿½ß£ï¿½" << w << endl;
             break;
         }
         if (is_board_full(board)) {
-            cout << "ÆåÅÌÒÑÂú£¬Æ½¾Ö£¡" << endl;
+            cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½Ö£ï¿½" << endl;
             break;
         }
 
         if (current_player == PLAYER) {
-            cout << "ÇëÂä×Ó£¬ÊäÈëÐÐÁÐ(Èç 1 1):" << endl;
+            cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ 1 1):" << endl;
             string move_str;
             getline(cin, move_str);
             if (move_str.empty()) {
                 continue;
             }
             try {
-                // ½âÎöÊäÈë
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 int rr, cc;
                 {
                     std::stringstream ss(move_str);
@@ -753,60 +753,60 @@ int main() {
                 rr -= 1; 
                 cc -= 1;
                 if (!is_valid_move(board, rr, cc)) {
-                    cout << "·Ç·¨Âä×Ó£¬ÇëÖØÐÂÊäÈë£¡" << endl;
+                    cout << "ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¡" << endl;
                     continue;
                 }
-                // Íæ¼ÒÂä×Ó
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 board = make_move(board, rr, cc, PLAYER);
                 current_player = AI;
             } catch (...) {
-                cout << "ÊäÈë¸ñÊ½ÓÐÎó£¬ÇëÖØÐÂÊäÈë¡£" << endl;
+                cout << "ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¡£" << endl;
             }
         } else {
-            // AI »ØºÏ
-            cout << "¿ªÊ¼¼ÆËã..." << endl;
+            // AI ï¿½Øºï¿½
+            cout << "ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½..." << endl;
             transposition_table.clear();
             nodes_explored = 0;
             search_start_time = now_in_seconds();
 
             if (!ai_first_move_done) {
-                // µÚÒ»ÊÖÇ³²ãËÑË÷
+                // ï¿½ï¿½Ò»ï¿½ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 int shallow_depth = 5;
                 auto ret = minimax(board, shallow_depth, -numeric_limits<double>::infinity(), numeric_limits<double>::infinity(), true);
-                // »»ÐÐ
+                // ï¿½ï¿½ï¿½ï¿½
                 cerr << endl;
                 double spent = now_in_seconds() - search_start_time;
                 auto mv = ret.second;
                 if (mv.first != -1 && mv.second != -1) {
                     board = make_move(board, mv.first, mv.second, AI);
-                    cout << "\033[92m¡¾AIµÚÒ»ÊÖ¡¿Âä×Ó: ÐÐ " << mv.first + 1 
-                         << ", ÁÐ " << mv.second + 1 
-                         << ", ºÄÊ± " << fixed << setprecision(2) << spent << "s, ½Úµã=" << nodes_explored << "\033[0m" 
+                    cout << "\033[92mï¿½ï¿½AIï¿½ï¿½Ò»ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << mv.first + 1 
+                         << ", ï¿½ï¿½ " << mv.second + 1 
+                         << ", ï¿½ï¿½Ê± " << fixed << setprecision(2) << spent << "s, ï¿½Úµï¿½=" << nodes_explored << "\033[0m" 
                          << endl;
                 }
                 ai_first_move_done = true;
             } else {
-                // ²éµ¥²½±ØÉ±/·ÀÊØ
+                // ï¿½éµ¥ï¿½ï¿½ï¿½ï¿½É±/ï¿½ï¿½ï¿½ï¿½
                 auto urgent_move = check_immediate_win_or_defense(board);
                 if (urgent_move.first != -1) {
-                    // ÓÐ½ô¼±²ßÂÔ
-                    cerr << endl; // ´òÓ¡»»ÐÐ
+                    // ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                    cerr << endl; // ï¿½ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½
                     board = make_move(board, urgent_move.first, urgent_move.second, AI);
-                    cout << "\033[92m¡¾AI½ô¼±²ßÂÔ¡¿Âä×Ó: ÐÐ " << urgent_move.first + 1
-                         << ", ÁÐ " << urgent_move.second + 1 
+                    cout << "\033[92mï¿½ï¿½AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << urgent_move.first + 1
+                         << ", ï¿½ï¿½ " << urgent_move.second + 1 
                          << "\033[0m" << endl;
                 } else {
-                    // Õý³£µü´ú¼ÓÉî
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     auto ret = search_best_move(board, MAX_DEPTH, true);
                     double best_score = ret.first;
                     auto mv = ret.second;
-                    cerr << endl; // ½áÊø½ø¶ÈÌõ
+                    cerr << endl; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     if (mv.first != -1 && mv.second != -1) {
                         double spent = now_in_seconds() - search_start_time;
-                        cout << "\033[92mAI Âä×Ó: ÐÐ " << mv.first + 1
-                             << ", ÁÐ " << mv.second + 1
-                             << ", ºÄÊ± " << fixed << setprecision(2) << spent << "s"
-                             << ", ½Úµã=" << nodes_explored
+                        cout << "\033[92mAI ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ " << mv.first + 1
+                             << ", ï¿½ï¿½ " << mv.second + 1
+                             << ", ï¿½ï¿½Ê± " << fixed << setprecision(2) << spent << "s"
+                             << ", ï¿½Úµï¿½=" << nodes_explored
                              << ", score=" << best_score << "\033[0m" << endl;
                         board = make_move(board, mv.first, mv.second, AI);
                     }
@@ -817,6 +817,6 @@ int main() {
     }
 
     print_board(board);
-    cout << "ÓÎÏ·½áÊø£¡" << endl;
+    cout << "ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
     return 0;
 }
