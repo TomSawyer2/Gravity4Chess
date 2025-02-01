@@ -1,0 +1,6 @@
+/.conda
+/.vscode
+/build
+/ckpt
+/ckpt_bak
+/mcts_cpp.egg-info

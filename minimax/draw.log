@@ -1,0 +1,702 @@
+共计算了38步
+总用时：80.28800009s
+平均用时：2.112842107631579s
+最大用时：8.907s
+最小用时：0s
+用时标准差：2.9496884075970855
+用时方差：8.70066170191263
+用时中位数：0.0
+
+8.065
+5.064
+3.554
+1.491
+1.209
+6.911
+4.319
+5.454
+3.984
+0
+0
+4.83
+0
+0
+0
+0
+8.192
+5.602
+6.081
+8.907
+6.564
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0.059
+0.00200009
+0
+
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+
+AI思考中...
+AI第一手: 行5,列4, 耗时 8.065s
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 3
+当前棋盘(底→顶):    
+[ ] [ ] [ ] [ ] [ ] 
+[ ] [ ] [ ] [ ] [ ] 
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [B] [ ]
+
+AI思考中...
+AI落子: 行5,列2, 耗时 5.064s, score=-20
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 3
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行4,列3, 耗时 3.554s, score=220
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [B] [ ] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 4 4
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [ ] [ ] [ ]
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行2,列2, 耗时 1.491s, score=160
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [ ]
+[ ] [ ] [W] [ ] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 2
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [ ]
+[ ] [W] [W] [ ] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行3,列4, 耗时 1.209s, score=-40
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [ ]
+[ ] [W] [W] [B] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 5
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [W]
+[ ] [W] [W] [B] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行3,列3, 耗时 6.911s, score=-30
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [W]
+[ ] [W] [WB] [B] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 3
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [W] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行4,列4, 耗时 4.319s, score=600
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [ ] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 3
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [B] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行2,列2, 耗时 5.454s, score=5060
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [ ]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 5
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行4,列4, 耗时 3.984s, score=9920
+当前棋盘(底→顶):
+[ ] [ ] [ ] [ ] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 4
+当前棋盘(底→顶):
+[ ] [ ] [ ] [W] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[ ] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列1, 耗时 0s
+当前棋盘(底→顶):
+[ ] [ ] [ ] [W] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 3
+当前棋盘(底→顶):
+[ ] [ ] [W] [W] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行1,列2, 耗时 0s
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [W] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 3
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WW] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行2,列3, 耗时 4.83s, score=10560
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWB] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [B] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 4 3
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWB] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [BW] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列3, 耗时 0s
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [ ] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [BW] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 4
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [ ] [BW] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列2, 耗时 0s
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [ ]
+[B] [B] [BW] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 5
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [W]
+[B] [B] [BW] [WBB] [ ]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列5, 耗时 0s
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [W]
+[B] [B] [BW] [WBB] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 4 3
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [W]
+[B] [B] [BWW] [WBB] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列3, 耗时 0s
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [B] [W]
+[B] [B] [BWWB] [WBB] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 4
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBB] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行4,列4, 耗时 8.192s, score=16690
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBB] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 4 4
+当前棋盘(底→顶):
+[ ] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行1,列1, 耗时 5.602s, score=15800
+当前棋盘(底→顶):
+[B] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 1
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[ ] [BB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行2,列2, 耗时 6.081s, score=11560
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[ ] [BBB] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 2
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[ ] [BBBW] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行2,列1, 耗时 8.907s, score=11550
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[ ] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 1
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [W] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+AI落子: 行3,列2, 耗时 6.564s, score=11740
+当前棋盘(底→顶):
+[BW] [B] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 2
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [B]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列5, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 2
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WBW] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [B] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行3,列2, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WBWB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [B] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 2
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [W]
+[W] [WBWB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BW] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列5, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WB]
+[W] [WBWB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BW] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 2
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WB]
+[W] [WBWB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWW] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行5,列2, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WB]
+[W] [WBWB] [WBW] [BW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 4
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WB]
+[W] [WBWB] [WBW] [BWW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列5, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[W] [WBWB] [WBW] [BWW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 4
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[W] [WBWB] [WBW] [BWWW] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行3,列4, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[W] [WBWB] [WBW] [BWWWB] [W]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 5
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[W] [WBWB] [WBW] [BWWWB] [WW]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行3,列5, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[W] [WBWB] [WBW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 1
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[WW] [WBWB] [WBW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行3,列1, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBB]
+[WWB] [WBWB] [WBW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 5
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBBW]
+[WWB] [WBWB] [WBW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列5, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBBWB]
+[WWB] [WBWB] [WBW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 3 3
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBBWB]
+[WWB] [WBWB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行3,列2, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [W] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 3
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WW] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列3, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WW] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 3
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWW] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行5,列3, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [W] [W] [W]
+[B] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [B] [ ]
+
+请输入落子 (行 列),从1开始: 1 4
+当前棋盘(底→顶):
+[BW] [BW] [W] [WW] [W]
+[B] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行1,列3, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[B] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [B] [ ]
+
+请输入落子 (行 列),从1开始: 2 1
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[B] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [B] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行4,列1, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [B] [ ]
+
+请输入落子 (行 列),从1开始: 5 4
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [B] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+AI思考中...
+AI落子: 行4,列2, 耗时 0.059s, score=1e+08
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [BB] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+请输入落子 (行 列),从1开始: 4 2
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [W]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [BBW] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+AI思考中...
+AI落子: 行1,列5, 耗时 0.00200009s, score=1e+08
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [WB]
+[BW] [BBBW] [WWBBB] [W] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [BBW] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+请输入落子 (行 列),从1开始: 2 4
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [WB]
+[BW] [BBBW] [WWBBB] [WW] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [BBW] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+AI思考中...
+【AI紧急策略】落子: 行2,列4, 耗时 0s
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [WB]
+[BW] [BBBW] [WWBBB] [WWB] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB]
+[BB] [BBW] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+游戏结束, 胜者: B
+当前棋盘(底→顶):
+[BW] [BW] [WB] [WW] [WB]
+[BW] [BBBW] [WWBBB] [WWB] [WBBWB]
+[WWB] [WBWBB] [WBWW] [BWWWB] [WWB] 
+[BB] [BBW] [BWWB] [WBBBW] [BB]
+[ ] [BWWB] [WWWB] [BW] [ ]
+
+游戏结束!
