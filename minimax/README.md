@@ -2,7 +2,7 @@
 
 ## 简介
 
-在本文件夹中，使用 Bitboard 存储棋盘状态，结合 Zobrist Hash、Alpha-Beta + Minimax 搜索、置换表、历史启发等优化手段，成功在 5×5×5 的三维棋盘上完成深度搜索，构建了一个高效的人工智能对弈系统。对于具体技术细节，见![基于 Minimax 算法的重力四子棋 AI 技术报告](https://github.com/TomSawyer2/Gravity4Chess/tree/main/minimax/Report.md)
+在本文件夹中，使用 Bitboard 存储棋盘状态，结合 Zobrist Hash、Alpha-Beta + Minimax 搜索、置换表、历史启发等优化手段，成功在 5×5×5 的三维棋盘上完成深度搜索，构建了一个高效的人工智能对弈系统。对于具体技术细节，见[基于 Minimax 算法的重力四子棋 AI 技术报告](https://github.com/TomSawyer2/Gravity4Chess/tree/main/minimax/Report.md)
 
 ## 文件结构
 
