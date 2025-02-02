@@ -5,7 +5,7 @@
 using namespace std;
 
 /*
- * ���ü� MD5 ʵ�֡�
+ * implement of Hash Table
  */
 namespace {
 static const uint32_t MD5_INIT_STATE[4] = {
@@ -91,7 +91,6 @@ string md5(const string& input) {
     for (int i = 0; i < 16; i++) {
       M[i] = to_uint32(chunk + i * 4);
     }
-    // 64 ��
     FF(a, b, c, d, M[0], 7, MD5_SINE_TABLE[0]);
     FF(d, a, b, c, M[1], 12, MD5_SINE_TABLE[1]);
     FF(c, d, a, b, M[2], 17, MD5_SINE_TABLE[2]);
@@ -172,15 +171,15 @@ string md5(const string& input) {
 }
 
 //================================================================
-static const char PLAYER = 'W';  // ���(����)
-static const char AI = 'B';      // AI(����)
+static const char PLAYER = 'W';
+static const char AI = 'B';
 
 static const int ROWS = 5;
 static const int COLS = 5;
-static const int MAX_STACK = 5;  // ÿ�����ѵ� 5 ��
-static const int MAX_DEPTH = 7;
+static const int MAX_STACK = 5;  // each grid can stack at most 5 pieces
+static const int MAX_DEPTH = 3;
 
-// �û����ṹ
+// define the transposition table
 struct TranspositionEntry {
   int depth;
   double alpha;
@@ -189,11 +188,9 @@ struct TranspositionEntry {
   pair<int, int> bestMove;
 };
 
-// ȫ���û��� + ������
 static unordered_map<string, TranspositionEntry> transposition_table;
 static std::mutex transposition_table_mutex;
 
-// ʱ�丨��
 static inline double now_in_seconds() {
   using namespace std::chrono;
   auto tp = high_resolution_clock::now();
@@ -202,7 +199,6 @@ static inline double now_in_seconds() {
 }
 
 //================================================================
-// ���̲���
 vector<vector<vector<char>>> create_board() {
   return vector<vector<vector<char>>>(ROWS, vector<vector<char>>(COLS));
 }
@@ -227,7 +223,6 @@ bool is_board_full(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// ����ת�ַ���
 string board_to_str(const vector<vector<vector<char>>>& board) {
   ostringstream oss;
   for (int r = 0; r < ROWS; r++) {
@@ -249,7 +244,6 @@ string hash_board(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// ʤ�����
 char check_winner(const vector<vector<vector<char>>>& board) {
   static vector<array<int, 3>> directions_3d = {
       {0, 1, 0},
@@ -299,7 +293,6 @@ char check_winner(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// ģʽƥ����
 static unordered_map<string, int> black_pattern_score = {
     {"BBBB", 9999999},
     {"BBB-", 5000},
@@ -400,11 +393,9 @@ double evaluate(const vector<vector<vector<char>>>& board) {
       if (p == PLAYER)
         hasW = true;
     }
-    // ��ͬʱ�� B / W��������
     if (hasB && hasW)
       continue;
 
-    // ����ģʽ��
     ostringstream oss;
     for (char p : pieces) {
       if (p == AI)
@@ -416,12 +407,10 @@ double evaluate(const vector<vector<vector<char>>>& board) {
     }
     string pattern = oss.str();
     if (pattern.find('B') != string::npos && pattern.find('W') == string::npos) {
-      // ֻ�� B
       if (black_pattern_score.count(pattern)) {
         ai_potential += black_pattern_score[pattern];
       }
     } else if (pattern.find('W') != string::npos && pattern.find('B') == string::npos) {
-      // ֻ�� W
       if (white_pattern_score.count(pattern)) {
         player_potential += white_pattern_score[pattern];
       }
@@ -431,7 +420,6 @@ double evaluate(const vector<vector<vector<char>>>& board) {
 }
 
 //================================================================
-// �û�������
 bool tt_lookup(const string& key, int depth, double alpha, double beta, double& val, pair<int, int>& bestMove) {
   lock_guard<mutex> guard(transposition_table_mutex);
   auto it = transposition_table.find(key);
@@ -452,7 +440,6 @@ void tt_store(const string& key, int depth, double alpha, double beta, double va
 }
 
 //================================================================
-// ���̰߳汾 minimax
 pair<double, pair<int, int>> minimax_single(
     const vector<vector<vector<char>>>& board,
     int depth,
@@ -474,7 +461,6 @@ pair<double, pair<int, int>> minimax_single(
   if (maximizing) {
     double best_val = -numeric_limits<double>::infinity();
     pair<int, int> best_move(-1, -1);
-    // ö�����п�����
     vector<pair<int, int>> moves;
     for (int r = 0; r < ROWS; r++) {
       for (int c = 0; c < COLS; c++) {
@@ -482,7 +468,6 @@ pair<double, pair<int, int>> minimax_single(
           moves.push_back({r, c});
       }
     }
-    // ����(��������)
     int cr = ROWS / 2, cc = COLS / 2;
     sort(moves.begin(), moves.end(), [&](auto& m1, auto& m2) {
       int d1 = abs(m1.first - cr) + abs(m1.second - cc);
@@ -505,7 +490,6 @@ pair<double, pair<int, int>> minimax_single(
   } else {
     double best_val = numeric_limits<double>::infinity();
     pair<int, int> best_move(-1, -1);
-    // ö��
     vector<pair<int, int>> moves;
     for (int r = 0; r < ROWS; r++) {
       for (int c = 0; c < COLS; c++) {
@@ -536,12 +520,10 @@ pair<double, pair<int, int>> minimax_single(
 }
 
 //================================================================
-// �������� (���ڸ��ڵ�)
 pair<double, pair<int, int>> minimax_root_parallel(
     const vector<vector<vector<char>>>& board,
     int depth,
     bool maximizing) {
-  // �ռ����п����߷�
   vector<pair<int, int>> moves;
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
@@ -550,7 +532,6 @@ pair<double, pair<int, int>> minimax_root_parallel(
     }
   }
   if (moves.empty()) {
-    // �޿���ʱ��ֱ������
     double sc = evaluate(board);
     return {sc, {-1, -1}};
   }
@@ -562,7 +543,6 @@ pair<double, pair<int, int>> minimax_root_parallel(
     return d1 < d2;
   });
 
-  // ���У���ÿ���߷�����һ���߳̽��е��߳� minimax
   vector<future<pair<double, pair<int, int>>>> futs;
   futs.reserve(moves.size());
   for (auto& mv : moves) {
@@ -572,12 +552,10 @@ pair<double, pair<int, int>> minimax_root_parallel(
                                 -numeric_limits<double>::infinity(),
                                 numeric_limits<double>::infinity(),
                                 !maximizing);
-      // ���� {value, rootMove}
       return make_pair(ret.first, mv);
     }));
   }
 
-  // �鲢���
   double best_val = maximizing ? -numeric_limits<double>::infinity()
                                : numeric_limits<double>::infinity();
   pair<int, int> best_move(-1, -1);
@@ -601,7 +579,6 @@ pair<double, pair<int, int>> minimax_root_parallel(
 }
 
 //================================================================
-// ���յĵ�������������ֻ�������ȲŲ���
 pair<double, pair<int, int>> search_best_move(
     const vector<vector<vector<char>>>& board,
     int max_depth,
@@ -609,7 +586,6 @@ pair<double, pair<int, int>> search_best_move(
   pair<double, pair<int, int>> best_result = {0.0, {-1, -1}};
   for (int d = 1; d <= max_depth; d++) {
     if (d < max_depth) {
-      // ���������ȣ����߳� root ����
       auto ret = minimax_single(board, d,
                                 -numeric_limits<double>::infinity(),
                                 numeric_limits<double>::infinity(),
@@ -621,21 +597,18 @@ pair<double, pair<int, int>> search_best_move(
         break;
       }
     } else {
-      // d == max_depth ʱ�����в�������
       auto ret = minimax_root_parallel(board, d, maximizing);
       if (ret.second.first != -1) {
         best_result = ret;
       }
-      break;  // �����Ⱥ�Ͳ��ټ���
+      break;
     }
   }
   return best_result;
 }
 
 //================================================================
-// ������ɱ/����
 pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>& board) {
-  // AI ��ɱ
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (is_valid_move(board, r, c)) {
@@ -646,7 +619,6 @@ pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>
       }
     }
   }
-  // ���ض���
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (is_valid_move(board, r, c)) {
@@ -661,9 +633,8 @@ pair<int, int> check_immediate_win_or_defense(const vector<vector<vector<char>>>
 }
 
 //================================================================
-// չʾ����ѭ��
 void print_board(const vector<vector<vector<char>>>& board) {
-  cout << "��ǰ���̣��ס�����:" << endl;
+  cout << "Current board (bottom to top): " << endl;
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (board[r][c].empty()) {
@@ -681,39 +652,35 @@ void print_board(const vector<vector<vector<char>>>& board) {
 }
 
 int main() {
-  // �������м��� C++ I/O������Ҫ�ֶ� flush/endl
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
   auto board = create_board();
-  board[1] = {{}, {'B'}, {'W'}, {'W'}, {}};
-  board[2] = {{}, {'W', 'W'}, {'B', 'B', 'W'}, {'B', 'B'}, {}};
-  board[3] = {{}, {}, {'B'}, {'W'}, {}};
+  // board[1] = {{}, {'B'}, {'W'}, {'W'}, {}};
+  // board[2] = {{}, {'W', 'W'}, {'B', 'B', 'W'}, {'B', 'B'}, {}};
+  // board[3] = {{}, {}, {'B'}, {'W'}, {}};
 
   char current_player = AI;
 
   bool ai_first_move_done = true;
 
   while (true) {
-    // ��ʾ����
     print_board(board);
 
     char w = check_winner(board);
     if (w != '\0') {
-      cout << "��Ϸ������ʤ�ߣ�" << w << endl;
+      cout << "Winner is" << w << endl;
       break;
     }
     if (is_board_full(board)) {
-      cout << "����������ƽ�֣�" << endl;
+      cout << "Board full!" << endl;
       break;
     }
 
     if (current_player == PLAYER) {
-      cout << "�����ӣ���������(�� 1 1):" << endl;
-      // endl���Զ� flush��ȷ����ʾ�ɼ�
+      cout << "Input position to insert (e.g. 1[ROW] 1[COL]):" << endl;
       string line;
       if (!std::getline(cin, line)) {
-        // ����ȡʧ��(EOF��)������������
         break;
       }
       if (line.empty()) {
@@ -728,19 +695,17 @@ int main() {
         rr -= 1;
         cc -= 1;
         if (!is_valid_move(board, rr, cc)) {
-          cout << "�Ƿ����ӣ����������룡" << endl;
+          cout << "Invalid input!" << endl;
           continue;
         }
         board = make_move(board, rr, cc, PLAYER);
         current_player = AI;
       } catch (...) {
-        cout << "�����ʽ�������������롣" << endl;
+        cout << "Unexpected error!" << endl;
       }
     } else {
-      cout << "��ʼ����..." << endl;
-      // ͬ�� endl���������
+      cout << "AI thinking..." << endl;
 
-      // ����û���
       {
         lock_guard<mutex> guard(transposition_table_mutex);
         transposition_table.clear();
@@ -748,39 +713,38 @@ int main() {
       double start_time = now_in_seconds();
 
       if (!ai_first_move_done) {
-        // AI��һ�֣�����ǳ������
         int shallow_depth = 7;
         auto ret = minimax_root_parallel(board, shallow_depth, true);
         double spent = now_in_seconds() - start_time;
         auto mv = ret.second;
         if (mv.first != -1) {
           board = make_move(board, mv.first, mv.second, AI);
-          cout << "��AI��һ�֡�����: �� " << (mv.first + 1)
-               << ", �� " << (mv.second + 1)
-               << ", ��ʱ " << fixed << setprecision(2) << spent << "s" << endl;
+          cout << "\033[92mAI deciding: Row " << (mv.first + 1)
+               << ", Col " << (mv.second + 1)
+               << ", Consuming " << fixed << setprecision(2) << spent << "s"
+               << "\033[0m" << endl;
         }
         ai_first_move_done = true;
       } else {
-        // �鵥����ɱ�����
         auto urgent = check_immediate_win_or_defense(board);
         if (urgent.first != -1) {
-          // ��������
           board = make_move(board, urgent.first, urgent.second, AI);
           double spent = now_in_seconds() - start_time;
-          cout << "��AI�������ԡ�����: �� " << (urgent.first + 1)
-               << ", �� " << (urgent.second + 1)
-               << ", ��ʱ " << fixed << setprecision(2) << spent << "s" << endl;
+          cout << "\033[92mAI urgent move: Row " << (urgent.first + 1)
+               << ", Col " << (urgent.second + 1)
+               << ", Consuming " << fixed << setprecision(2) << spent << "s"
+               << "\033[0m" << endl;
         } else {
-          // ������������ (�����Ȳ���)
           auto best_ret = search_best_move(board, MAX_DEPTH, true);
           double spent = now_in_seconds() - start_time;
           double best_score = best_ret.first;
           auto mv = best_ret.second;
           if (mv.first != -1) {
-            cout << "AI ����: �� " << (mv.first + 1)
-                 << ", �� " << (mv.second + 1)
-                 << ", ��ʱ " << fixed << setprecision(2) << spent << "s"
-                 << ", score=" << best_score << endl;
+            cout << "\033[92mAI deciding: Row " << (mv.first + 1)
+                 << ", Col " << (mv.second + 1)
+                 << ", Consuming " << fixed << setprecision(2) << spent << "s"
+                 << ", score=" << best_score
+                 << "\033[0m" << endl;
             board = make_move(board, mv.first, mv.second, AI);
           }
         }
@@ -790,6 +754,6 @@ int main() {
   }
 
   print_board(board);
-  cout << "��Ϸ������" << endl;
+  cout << "Game end!" << endl;
   return 0;
 }

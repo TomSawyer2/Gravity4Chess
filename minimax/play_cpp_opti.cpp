@@ -3,30 +3,30 @@ using namespace std;
 
 /*
 ========================================
-  1. ȫ�ֳ��� & ����
+  1. Board Size & Constants
 ========================================
 */
 static const int ROWS = 5;
 static const int COLS = 5;
-static const int MAX_STACK = 5;  // ÿ�����5��
+static const int MAX_STACK = 5;  // max 5 layers per position
 static const int MAX_DEPTH = 9;
 
-static const char PLAYER = 'W';  // ����
-static const char AI = 'B';      // ����
+static const char PLAYER = 'W';  // Player
+static const char AI = 'B';      // AI
 
-// ���Ի�: index = r*25 + c*5 + l
+// Position index: index = r*25 + c*5 + l
 inline int indexOf(int r, int c, int l) {
   return r * 25 + c * 5 + l;
 }
 
 /*
 ========================================
-  2. �Զ��� BitBoard (2��uint64_t)
+  2. BitBoard Representation (2 uint64_t)
 ========================================
 */
 struct BitBoard {
-  uint64_t lo;  // ��64λ
-  uint64_t hi;  // ��64λ
+  uint64_t lo;  // lower 64 bits
+  uint64_t hi;  // higher 64 bits
 
   BitBoard()
       : lo(0ULL), hi(0ULL) {}
@@ -60,15 +60,12 @@ struct BitBoard {
       return ((hi >> pos) & 1ULL) != 0ULL;
     }
   }
-  // ��λ��
   inline BitBoard operator&(const BitBoard& rhs) const {
     return BitBoard(lo & rhs.lo, hi & rhs.hi);
   }
-  // ��λ��
   inline BitBoard operator|(const BitBoard& rhs) const {
     return BitBoard(lo | rhs.lo, hi | rhs.hi);
   }
-  // ��λ���
   inline BitBoard operator^(const BitBoard& rhs) const {
     return BitBoard(lo ^ rhs.lo, hi ^ rhs.hi);
   }
@@ -76,7 +73,6 @@ struct BitBoard {
     lo ^= rhs.lo;
     hi ^= rhs.hi;
   }
-  // �Ƿ�ȫ��Ϊ0
   inline bool empty() const {
     return (lo == 0ULL && hi == 0ULL);
   }
@@ -84,7 +80,7 @@ struct BitBoard {
 
 /*
 ========================================
-  3. ���� Board
+  3. Board Structure
      - blackBB, whiteBB
      - topIndex[r][c]
      - boardHash (Zobrist)
@@ -93,8 +89,8 @@ struct BitBoard {
 struct Board {
   BitBoard blackBB;
   BitBoard whiteBB;
-  int topIndex[ROWS][COLS];  // �ѵ��߶�
-  uint64_t boardHash;        // zobrist
+  int topIndex[ROWS][COLS];  // stack height
+  uint64_t boardHash;        // zobrist hash
 
   Board() {
     memset(topIndex, 0, sizeof(topIndex));
@@ -105,7 +101,7 @@ struct Board {
 /*
 ========================================
   4. Zobrist Hash
-     - ÿ�� index ��[0..124], color=0(B),1(W)
+     - each index in [0..124], color=0(B), 1(W)
 ========================================
 */
 static uint64_t ZOBRIST[125][2];
@@ -120,7 +116,7 @@ static void initZobrist() {
   }
 }
 
-// �� Board ��������������Zobrist(��ѡ) - ͨ��������XOR
+// calculate Zobrist hash for the Board (using XOR)
 uint64_t calcZobrist(const Board& bd) {
   uint64_t h = 0ULL;
   // black
@@ -140,17 +136,15 @@ uint64_t calcZobrist(const Board& bd) {
 
 /*
 ========================================
-  5. ��������: isValid, makeMove, isFull
+  5. Functions: isValid, makeMove, isFull
 ========================================
 */
-// �ж��ܷ���(r,c)����
 bool isValidMove(const Board& bd, int r, int c) {
   if (r < 0 || r >= ROWS || c < 0 || c >= COLS)
     return false;
   return (bd.topIndex[r][c] < MAX_STACK);
 }
 
-// ����: �����¾���(����ʽ)
 Board makeMove(const Board& bd, int r, int c, bool isBlack) {
   Board newbd = bd;
   int layer = newbd.topIndex[r][c];
@@ -168,7 +162,6 @@ Board makeMove(const Board& bd, int r, int c, bool isBlack) {
   return newbd;
 }
 
-// �ж��Ƿ���
 bool isBoardFull(const Board& bd) {
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
@@ -181,17 +174,16 @@ bool isBoardFull(const Board& bd) {
 
 /*
 ========================================
-  6. ʤ�����
-     - ��Ԥ�������� 4 �� lines
-     - �� blackBB / whiteBB ���
+  6. Winning Conditions
+     - check for 4 consecutive lines
+     - check blackBB / whiteBB states
 ========================================
 */
-// lines: ÿ������ 4 �� index
+// lines: every 4 index positions
 static vector<array<int, 4>> allLines;
 
 static void buildAllLines() {
   allLines.clear();
-  // 3D����
   static const int dirs[13][3] = {
       {0, 1, 0},
       {1, 0, 0},
@@ -237,9 +229,7 @@ static void buildAllLines() {
   }
 }
 
-// ���ټ�� 4 ��
 bool checkWin(const BitBoard& b) {
-  // ���� allLines
   for (auto& ln : allLines) {
     if (b.testBit(ln[0]) && b.testBit(ln[1]) &&
         b.testBit(ln[2]) && b.testBit(ln[3])) {
@@ -249,7 +239,6 @@ bool checkWin(const BitBoard& b) {
   return false;
 }
 
-// ����Ӯ���� 'B', ��Ӯ���� 'W', ���򷵻� '\0'
 char checkWinner(const Board& bd) {
   if (checkWin(bd.blackBB))
     return 'B';
@@ -260,9 +249,9 @@ char checkWinner(const Board& bd) {
 
 /*
 ========================================
-  7. ��������
-     - ���� allLines, ͳ��ֻ���ڻ�ֻ���׵���
-     - (Ҳ�������߼�λ����)
+  7. Heuristics
+     - evaluate all lines, count the blocked and open positions
+     - (also consider historical move order)
 ========================================
 */
 static unordered_map<string, int> black_pattern_score = {
@@ -297,16 +286,13 @@ static unordered_map<string, int> white_pattern_score = {
     {"----", 0}};
 
 double evaluate(const Board& bd) {
-  // �ȿ��Ƿ�����Ӯ
   if (checkWin(bd.blackBB))
     return 99999999.0;
   if (checkWin(bd.whiteBB))
     return -99999999.0;
 
   long long blackScore = 0, whiteScore = 0;
-  // ���� allLines
   for (auto& ln : allLines) {
-    // �ж�4��λ������B/W/��
     bool hasB = false, hasW = false;
     int Bcount = 0, Wcount = 0;
     for (int i = 0; i < 4; i++) {
@@ -325,8 +311,6 @@ double evaluate(const Board& bd) {
         break;
     }
     if (hasB && !hasW) {
-      // ����ģʽ, e.g. "BB--"
-      // ����ɼ�: Bcount=0..4 => switch
       switch (Bcount) {
         case 4:
           blackScore += 9999999;
@@ -367,7 +351,7 @@ double evaluate(const Board& bd) {
 
 /*
 ========================================
-  8. �û��� + ��ʷ���� + Minimax
+  8. User Interface + Game Loop + Minimax
 ========================================
 */
 enum class BoundType { EXACT,
@@ -397,7 +381,6 @@ static inline double now_in_seconds() {
   return double(duration_cast<milliseconds>(dur).count()) / 1000.0;
 }
 
-// TT����
 bool ttLookup(uint64_t key, int depth, double alpha, double beta, double& val, pair<int, int>& bestMv) {
   auto it = transpositionTable.find(key);
   if (it == transpositionTable.end())
@@ -428,7 +411,6 @@ bool ttLookup(uint64_t key, int depth, double alpha, double beta, double& val, p
   return alpha >= beta;
 }
 
-// TT�洢
 void ttStore(uint64_t key, int depth, double val, double alpha, double beta, pair<int, int> bestMv) {
   BoundType bt;
   if (val <= alpha)
@@ -441,7 +423,6 @@ void ttStore(uint64_t key, int depth, double val, double alpha, double beta, pai
   transpositionTable[key] = entry;
 }
 
-// ����(��ʷ���� + TT bestMove)
 void orderMoves(vector<pair<int, int>>& moves, const pair<int, int>& ttMove) {
   if (ttMove.first != -1) {
     auto it = find(moves.begin(), moves.end(), ttMove);
@@ -460,10 +441,9 @@ void orderMoves(vector<pair<int, int>>& moves, const pair<int, int>& ttMove) {
 
 /*
 ========================================
-  9. Minimax ���߳�
+  9. Minimax
 ========================================
 */
-// ����ԭ��
 pair<double, pair<int, int>> minimaxSingle(
     const Board& bd,
     int depth,
@@ -472,13 +452,11 @@ pair<double, pair<int, int>> minimaxSingle(
     bool maximizing);
 
 double doNullMove(const Board& bd, int depth, double alpha, double beta) {
-  // �����Լ� => depth-2
   int R = 1;
   auto ret = minimaxSingle(bd, depth - 1 - R, alpha, beta, false);
   return ret.first;
 }
 
-// �Ƿ����� Null Move
 static bool allowNullMove = true;
 bool nullMoveAllowed(const Board& bd, int depth) {
   if (!allowNullMove)
@@ -488,7 +466,6 @@ bool nullMoveAllowed(const Board& bd, int depth) {
   return true;
 }
 
-// ���ĵ��߳� minimax
 pair<double, pair<int, int>> minimaxSingle(
     const Board& bd,
     int depth,
@@ -505,7 +482,6 @@ pair<double, pair<int, int>> minimaxSingle(
     }
   }
 
-  // ��ֹ
   double sc = evaluate(bd);
   if (fabs(sc) >= 99999999.0 || depth == 0 || isBoardFull(bd)) {
     return {sc, {-1, -1}};
@@ -587,7 +563,7 @@ pair<double, pair<int, int>> minimaxSingle(
 
 /*
 ========================================
- 10. ��������
+ 10. Search Best Move
 ========================================
 */
 pair<double, pair<int, int>> searchBestMove(const Board& bd, int maxDepth, bool maximizing) {
@@ -606,11 +582,10 @@ pair<double, pair<int, int>> searchBestMove(const Board& bd, int maxDepth, bool 
 
 /*
 ========================================
- 11. ������ɱ/����
+ 11. Check Immediate Win or Defense
 ========================================
 */
 pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
-  // AI��ɱ
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (isValidMove(bd, r, c)) {
@@ -621,7 +596,6 @@ pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
       }
     }
   }
-  // ����
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       if (isValidMove(bd, r, c)) {
@@ -637,14 +611,11 @@ pair<int, int> checkImmediateWinOrDefense(const Board& bd) {
 
 /*
 ========================================
- 12. ��ӡ����ѭ��(�˻���ս) - ���߳�
+ 12. Print Board
 ========================================
 */
-// ��ӡ(��->��)
 void printBoard(const Board& bd) {
-  cout << "��ǰ����(�ס���):\n";
-  // ����ֻ�ܴ� topIndex[r][c] ����or����չʾ
-  // ������ʾ: bottom to top
+  cout << "Current board (bottom to top): \n";
   for (int r = 0; r < ROWS; r++) {
     for (int c = 0; c < COLS; c++) {
       int h = bd.topIndex[r][c];
@@ -675,16 +646,13 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
-  // ��ʼ��
   initZobrist();
   buildAllLines();
   memset(historyHeuristic, 0, sizeof(historyHeuristic));
 
-  // �����վ���
   Board board;
   // boardHash=0; black/whiteBB=0; topIndex=0
 
-  // ����=AI
   char currentPlayer = AI;
   bool aiFirstMoveDone = false;
 
@@ -692,17 +660,16 @@ int main() {
     printBoard(board);
     char w = checkWinner(board);
     if (w != '\0') {
-      cout << "��Ϸ����, ʤ��: " << w << "\n";
+      cout << "Game end! Winner is: " << w << "\n";
       break;
     }
     if (isBoardFull(board)) {
-      cout << "��������, ƽ��!\n";
+      cout << "Board full!\n";
       break;
     }
 
     if (currentPlayer == PLAYER) {
-      // ����
-      cout << "���������� (�� ��),��1��ʼ: " << flush;
+      cout << "Please input position to insert (e.g. 1[ROW] 1[COL]): " << flush;
       string line;
       if (!getline(cin, line))
         break;
@@ -716,14 +683,14 @@ int main() {
       rr--;
       cc--;
       if (!isValidMove(board, rr, cc)) {
-        cout << "�Ƿ�����,������.\n";
+        cout << "Invalid input!\n";
         continue;
       }
       board = makeMove(board, rr, cc, false /*white*/);
       currentPlayer = AI;
     } else {
       // AI
-      cout << "AI˼����...\n";
+      cout << "AI thinking...\n";
       double st = now_in_seconds();
       if (!aiFirstMoveDone) {
         auto ret = searchBestMove(board, MAX_DEPTH, true);
@@ -731,28 +698,30 @@ int main() {
         auto mv = ret.second;
         if (mv.first != -1) {
           board = makeMove(board, mv.first, mv.second, true);
-          cout << "AI��һ��: ��" << mv.first + 1 << ",��" << mv.second + 1
-               << ", ��ʱ " << sp << "s\n";
+          cout << "\033[92mAI deciding: Row " << mv.first + 1 << ", Col " << mv.second + 1
+               << ", Spending " << sp << "s\n"
+               << "\033[0m" << endl;;
         }
         aiFirstMoveDone = true;
       } else {
-        // ������ɱ/����
         auto urgent = checkImmediateWinOrDefense(board);
         if (urgent.first != -1) {
           board = makeMove(board, urgent.first, urgent.second, true);
           double sp = now_in_seconds() - st;
-          cout << "��AI�������ԡ�����: ��" << urgent.first + 1
-               << ",��" << urgent.second + 1
-               << ", ��ʱ " << sp << "s\n";
+          cout << "\033[92mAI urgent move: Row " << urgent.first + 1
+               << ", Col" << urgent.second + 1
+               << ", Spending " << sp << "s\n"
+               << "\033[0m" << endl;
         } else {
           auto bestRet = searchBestMove(board, MAX_DEPTH, true);
           double sp = now_in_seconds() - st;
           double bestScore = bestRet.first;
           auto mv = bestRet.second;
           if (mv.first != -1) {
-            cout << "AI����: ��" << mv.first + 1 << ",��" << mv.second + 1
-                 << ", ��ʱ " << sp << "s"
-                 << ", score=" << bestScore << "\n";
+            cout << "\033[92mAI deciding: Row " << mv.first + 1 << ", Col" << mv.second + 1
+                 << ", Spending " << sp << "s"
+                 << ", score=" << bestScore
+                 << "\033[0m" << endl;;
             board = makeMove(board, mv.first, mv.second, true);
           }
         }
@@ -762,6 +731,6 @@ int main() {
   }
 
   printBoard(board);
-  cout << "��Ϸ����!\n";
+  cout << "Game end!\n";
   return 0;
 }

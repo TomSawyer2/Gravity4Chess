@@ -2,5 +2,6 @@
 /.vscode
 /build
 /ckpt
+/ckpt_cloud
 /ckpt_bak
 /mcts_cpp.egg-info

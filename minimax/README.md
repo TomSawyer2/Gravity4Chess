@@ -12,12 +12,10 @@
 - `play_cpp_opti.cpp`：使用 Bitboard、Zobrist Hash、历史启发优化后的 C++ 游戏代码（更快）
 - `data_analysis.py`：分析对局记录耗时数据
 
-- `game_multi.exe`：编译后的多线程搜索游戏可执行文件
-- `game_opti_7.exe`：编译后的优化游戏可执行文件（搜索深度为7）
-- `game_opti_8.exe`：编译后的优化游戏可执行文件（搜索深度为8）
-- `game_opti_9.exe`：编译后的优化游戏可执行文件（搜索深度为9）
-
-C++ 文件为了保持与终端输出字符编码一致性，使用GBK编码。
+- `play_multi.exe`：编译后的多线程搜索游戏可执行文件
+- `play_opti_7.exe`：编译后的优化游戏可执行文件（搜索深度为7）
+- `play_opti_8.exe`：编译后的优化游戏可执行文件（搜索深度为8）
+- `play_opti_9.exe`：编译后的优化游戏可执行文件（搜索深度为9）
 
 配置详解：
 
@@ -58,7 +56,7 @@ MAX_DEPTH = 7; // 最大搜索深度
 ## 编译
 
 ```bash
-g++ -std=c++17 -O3 -march=native -flto -funroll-loops -DNDEBUG -o ./minimax/game_opti.exe ./minimax/play_cpp_opti.cpp
+g++ -std=c++17 -O3 -march=native -flto -funroll-loops -DNDEBUG -o ./minimax/game_opti_8.exe ./minimax/play_cpp_opti.cpp
 ```
 
 ## 运行
