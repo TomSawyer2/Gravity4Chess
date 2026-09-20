@@ -80,7 +80,13 @@ function StoneInstances({ pieces, side, spacing }: {
 
   if (filtered.length === 0) return null
   return (
-    <instancedMesh ref={ref} args={[undefined, undefined, filtered.length]} castShadow receiveShadow>
+    <instancedMesh
+      ref={ref}
+      args={[undefined, undefined, filtered.length]}
+      castShadow
+      receiveShadow
+      raycast={() => undefined}
+    >
       <sphereGeometry args={[0.365, 36, 20]} />
       <meshPhysicalMaterial
         color={side === 'B' ? '#161714' : '#eee5d2'}
@@ -114,7 +120,13 @@ function AnimatedStone({ piece, spacing }: { piece: Piece; spacing: number }) {
   })
 
   return (
-    <mesh ref={mesh} position={[x, targetY + 3.2, z]} castShadow receiveShadow>
+    <mesh
+      ref={mesh}
+      position={[x, targetY + 3.2, z]}
+      castShadow
+      receiveShadow
+      raycast={() => undefined}
+    >
       <sphereGeometry args={[0.365, 36, 20]} />
       <meshPhysicalMaterial
         color={piece.side === 'B' ? '#161714' : '#eee5d2'}
@@ -194,7 +206,11 @@ function BoardModel({
         const [x, z] = movePosition(lastMove)
         const layer = stacks[lastMove].length - 1
         return (
-          <mesh position={[x, 0.31 + layer * spacing + 0.215, z]} rotation={[-Math.PI / 2, 0, 0]}>
+          <mesh
+            position={[x, 0.31 + layer * spacing + 0.215, z]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            raycast={() => undefined}
+          >
             <ringGeometry args={[0.065, 0.102, 28]} />
             <meshBasicMaterial color="#b94632" transparent opacity={0.95} />
           </mesh>
@@ -207,10 +223,12 @@ function BoardModel({
         const candidate = analysis?.candidates.find((item) => item.move === move)
         const canPlace = interactive && height < 5
         const isHovered = hoveredMove === move && canPlace
+        const targetY = 0.31 + height * spacing
+        const guideHeight = Math.max(0.15, targetY - 0.16)
         return (
           <group key={move}>
             <mesh
-              position={[x, 1.55, z]}
+              position={[x, 0.12, z]}
               onPointerOver={(event) => {
                 event.stopPropagation()
                 if (canPlace) setHoveredMove(move)
@@ -221,20 +239,41 @@ function BoardModel({
                 if (canPlace) onColumnClick(move)
               }}
             >
-              <cylinderGeometry args={[0.47, 0.47, 3.1, 20]} />
+              <boxGeometry args={[0.91, 0.16, 0.91]} />
               <meshBasicMaterial transparent opacity={0} depthWrite={false} />
             </mesh>
 
             {isHovered && (
-              <mesh position={[x, 0.31 + height * spacing, z]} scale={[1, 0.56, 1]}>
-                <sphereGeometry args={[0.37, 32, 18]} />
-                <meshStandardMaterial
-                  color={side === 'B' ? '#282a25' : '#fff8e9'}
-                  transparent
-                  opacity={0.48}
-                  roughness={0.35}
-                />
-              </mesh>
+              <group>
+                <RoundedBox
+                  args={[0.89, 0.035, 0.89]}
+                  radius={0.07}
+                  smoothness={3}
+                  position={[x, 0.105, z]}
+                >
+                  <meshBasicMaterial
+                    color="#b94632"
+                    transparent
+                    opacity={0.2}
+                    depthWrite={false}
+                  />
+                </RoundedBox>
+                {height > 0 && (
+                  <mesh position={[x, 0.16 + guideHeight / 2, z]} raycast={() => undefined}>
+                    <cylinderGeometry args={[0.018, 0.018, guideHeight, 10]} />
+                    <meshBasicMaterial color="#b94632" transparent opacity={0.32} depthWrite={false} />
+                  </mesh>
+                )}
+                <mesh position={[x, targetY, z]} scale={[1, 0.56, 1]} raycast={() => undefined}>
+                  <sphereGeometry args={[0.37, 32, 18]} />
+                  <meshStandardMaterial
+                    color={side === 'B' ? '#282a25' : '#fff8e9'}
+                    transparent
+                    opacity={0.48}
+                    roughness={0.35}
+                  />
+                </mesh>
+              </group>
             )}
 
             {heatmapEnabled && candidate && (
@@ -323,7 +362,7 @@ export function BoardScene(props: BoardSceneProps) {
           )
         })}
       </div>
-      <div className="board-help">拖动旋转 · 滚轮缩放 · 视角按钮快速定位</div>
+      <div className="board-help">点任意底格落至该列顶层 · 拖动旋转 · 滚轮缩放</div>
     </div>
   )
 }
