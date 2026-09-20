@@ -1,0 +1,35 @@
+{
+  "name": "gravity4-web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm build:wasm && tsc -b && vite build",
+    "build:ui": "tsc -b && vite build",
+    "build:wasm": "bash scripts/build-wasm.sh",
+    "benchmark:engine": "pnpm build:wasm && make -B benchmark-cli && node scripts/benchmark-engine.mjs",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
+    "echarts": "^6.0.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "three": "^0.180.0",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "^0.180.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@10.12.1"
+}

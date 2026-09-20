@@ -200,6 +200,35 @@ void testLegacySmoke() {
   require(result.stats.completedDepth == 3, "legacy engine completes depth 3");
 }
 
+void testRootMoveAnalysis() {
+  Board board;
+  OptimizedEngine engine(4);
+  const SearchResult result = engine.search(
+      board, Side::Black, SearchLimits{3, 0, 0, true});
+
+  require(result.rootMoves.size() == kColumns,
+          "root analysis must expand every legal column");
+  int bestScore = -kInfinity;
+  bool foundBestMove = false;
+  std::array<bool, kColumns> seen{};
+  for (const auto& candidate : result.rootMoves) {
+    require(board.isLegal(candidate.move),
+            "root analysis candidates must be legal");
+    require(!seen[candidate.move],
+            "root analysis candidates must be unique");
+    seen[candidate.move] = true;
+    bestScore = std::max(bestScore, candidate.score);
+    if (candidate.move == result.move) foundBestMove = true;
+  }
+  require(foundBestMove, "root analysis must include the selected move");
+  require(bestScore == result.score,
+          "root analysis best score must match the search result");
+  require(result.rootMoves[0].score == result.rootMoves[4].score &&
+              result.rootMoves[0].score == result.rootMoves[20].score &&
+              result.rootMoves[0].score == result.rootMoves[24].score,
+          "symmetric root moves must share their expanded score");
+}
+
 }  // namespace
 
 int main() {
@@ -208,6 +237,7 @@ int main() {
   testKnownWin();
   testSearchAgainstReference();
   testLegacySmoke();
+  testRootMoveAnalysis();
   std::cout << "All engine tests passed.\n";
   return 0;
 }

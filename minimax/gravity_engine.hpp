@@ -374,6 +374,17 @@ struct Board {
     }
     return moves;
   }
+
+  int rootRepresentative(int move) const {
+    int representative = move;
+    for (int transform = 0; transform < 8; ++transform) {
+      if (!invariantUnder(transform)) continue;
+      representative = std::min(
+          representative,
+          static_cast<int>(geometry().transforms[transform][move]));
+    }
+    return representative;
+  }
 };
 
 inline int slowEvaluate(const Board& board) {
@@ -397,6 +408,7 @@ struct SearchLimits {
   int maxDepth = 9;
   int timeLimitMs = 0;
   uint64_t nodeLimit = 0;
+  bool collectRootMoves = false;
 };
 
 struct SearchStats {
@@ -420,6 +432,11 @@ struct SearchResult {
   int move = kNoMove;
   int score = 0;
   SearchStats stats;
+  struct RootMoveEvaluation {
+    int move = kNoMove;
+    int score = 0;
+  };
+  std::vector<RootMoveEvaluation> rootMoves;
 };
 
 class SearchClock {
@@ -479,7 +496,7 @@ class LegacyEngine {
       stats_.elapsedMs = clock_.elapsedMs();
       stats_.move = urgent;
       stats_.score = side == Side::Black ? kMateScore : -kMateScore;
-      return SearchResult{urgent, stats_.score, stats_};
+      return SearchResult{urgent, stats_.score, stats_, {}};
     }
     std::pair<int, int> best = {0, kNoMove};
 
@@ -495,7 +512,7 @@ class LegacyEngine {
     stats_.elapsedMs = clock_.elapsedMs();
     stats_.move = best.second;
     stats_.score = best.first;
-    return SearchResult{best.second, best.first, stats_};
+    return SearchResult{best.second, best.first, stats_, {}};
   }
 
  private:
@@ -751,13 +768,15 @@ class OptimizedEngine {
 
     int bestMove = kNoMove;
     int bestScore = 0;
+    std::vector<SearchResult::RootMoveEvaluation> bestRootMoves;
 
     for (int depth = 1; depth <= limits.maxDepth; ++depth) {
       int alpha = -kInfinity;
       int beta = kInfinity;
       int delta = 1000;
 
-      if (depth >= 3 && std::abs(bestScore) < kMateScore / 2) {
+      if (!limits.collectRootMoves && depth >= 3 &&
+          std::abs(bestScore) < kMateScore / 2) {
         alpha = std::max(-kInfinity, bestScore - delta);
         beta = std::min(kInfinity, bestScore + delta);
       }
@@ -784,6 +803,8 @@ class OptimizedEngine {
       if (iteration.move != kNoMove) {
         bestMove = iteration.move;
         bestScore = iteration.score;
+        bestRootMoves.assign(iteration.moves.begin(),
+                             iteration.moves.begin() + iteration.moveCount);
       }
       stats_.completedDepth = depth;
       if (std::abs(bestScore) >= kMateScore - kCells) break;
@@ -792,7 +813,7 @@ class OptimizedEngine {
     stats_.elapsedMs = clock_.elapsedMs();
     stats_.move = bestMove;
     stats_.score = bestScore;
-    return SearchResult{bestMove, bestScore, stats_};
+    return SearchResult{bestMove, bestScore, stats_, std::move(bestRootMoves)};
   }
 
  private:
@@ -816,6 +837,8 @@ class OptimizedEngine {
   struct RootResult {
     int score = 0;
     int move = kNoMove;
+    std::array<SearchResult::RootMoveEvaluation, kColumns> moves{};
+    int moveCount = 0;
   };
 
   SearchLimits limits_;
@@ -1098,7 +1121,8 @@ class OptimizedEngine {
     if (probe(positionKey, depth, 0, probeAlpha, probeBeta,
               ignoredValue, ttMove)) {
       const TTEntry& entry = table_[positionKey & tableMask_];
-      if (entry.bound == Bound::Exact && ttMove != kNoMove) {
+      if (!limits_.collectRootMoves && entry.bound == Bound::Exact &&
+          ttMove != kNoMove) {
         return RootResult{ignoredValue, ttMove};
       }
     }
@@ -1112,6 +1136,7 @@ class OptimizedEngine {
     int bestValue = -kInfinity;
     int bestMove = kNoMove;
     bool firstMove = true;
+    RootResult result;
 
     for (int i = 0; i < moveCount; ++i) {
       const int move = moves[i].move;
@@ -1120,6 +1145,9 @@ class OptimizedEngine {
       int value;
       if (board.hasWinAt(side, undo.pos)) {
         value = kMateScore - 1;
+      } else if (limits_.collectRootMoves) {
+        value = -negamax(board, opposite(side), depth - 1,
+                         -kInfinity, kInfinity, undo.pos, 1);
       } else if (firstMove) {
         value = -negamax(board, opposite(side), depth - 1,
                          -beta, -alpha, undo.pos, 1);
@@ -1136,6 +1164,9 @@ class OptimizedEngine {
       if (stopped_) return RootResult{};
       firstMove = false;
 
+      result.moves[result.moveCount++] =
+          SearchResult::RootMoveEvaluation{move, value};
+
       if (value > bestValue) {
         bestValue = value;
         bestMove = move;
@@ -1149,7 +1180,29 @@ class OptimizedEngine {
 
     store(positionKey, depth, 0, bestValue,
           alphaOriginal, betaOriginal, bestMove);
-    return RootResult{bestValue, bestMove};
+
+    if (limits_.collectRootMoves) {
+      const auto representativeScores = result.moves;
+      const int representativeCount = result.moveCount;
+      result.moveCount = 0;
+      uint32_t mask = board.legalMask;
+      while (mask != 0) {
+        const int move = __builtin_ctz(mask);
+        mask &= mask - 1;
+        const int representative = board.rootRepresentative(move);
+        for (int i = 0; i < representativeCount; ++i) {
+          if (representativeScores[i].move != representative) continue;
+          result.moves[result.moveCount++] =
+              SearchResult::RootMoveEvaluation{move,
+                                                representativeScores[i].score};
+          break;
+        }
+      }
+    }
+
+    result.score = bestValue;
+    result.move = bestMove;
+    return result;
   }
 };
 
