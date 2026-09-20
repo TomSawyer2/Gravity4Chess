@@ -3,22 +3,26 @@ import type {
   EngineWorkerResponse,
   WorkerAnalyzeMessage,
 } from './protocol'
+import { previewAnalyze } from './preview-engine'
 
 interface PendingRequest {
+  payload: AnalysisRequest
   resolve: (result: AnalysisResult) => void
   reject: (error: Error) => void
 }
 
-class EngineClient {
+export class EngineClient {
   private worker: Worker | null = null
   private requestId = 0
   private pending = new Map<number, PendingRequest>()
+  private previewFallback = false
 
   analyze(payload: AnalysisRequest): Promise<AnalysisResult> {
+    if (this.previewFallback) return Promise.resolve(previewAnalyze(payload))
     this.ensureWorker()
     const requestId = ++this.requestId
     return new Promise((resolve, reject) => {
-      this.pending.set(requestId, { resolve, reject })
+      this.pending.set(requestId, { payload, resolve, reject })
       const message: WorkerAnalyzeMessage = { type: 'analyze', requestId, payload }
       this.worker?.postMessage(message)
     })
@@ -27,6 +31,7 @@ class EngineClient {
   restart(): void {
     this.worker?.terminate()
     this.worker = null
+    this.previewFallback = false
     for (const request of this.pending.values()) {
       request.reject(new Error('搜索已取消'))
     }
@@ -49,13 +54,26 @@ class EngineClient {
       }
       request.resolve(event.data.payload)
     }
-    this.worker.onerror = (event) => {
-      const error = new Error(event.message || '引擎 Worker 发生错误')
-      for (const request of this.pending.values()) request.reject(error)
+    const fallBackToPreview = () => {
+      this.previewFallback = true
+      for (const request of this.pending.values()) {
+        try {
+          request.resolve(previewAnalyze(request.payload))
+        } catch (error) {
+          request.reject(
+            error instanceof Error ? error : new Error('预览引擎发生错误'),
+          )
+        }
+      }
       this.pending.clear()
       this.worker?.terminate()
       this.worker = null
     }
+    this.worker.onerror = (event) => {
+      event.preventDefault()
+      fallBackToPreview()
+    }
+    this.worker.onmessageerror = fallBackToPreview
   }
 }
 
